@@ -19,9 +19,33 @@ class IndexState extends State<Index>{
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text("Index"),
+        title: const Text("首页"),
       ),
-      body: Text("SSSS"),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/login');
+              },
+              child: Text('Login'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/register');
+              },
+              child: Text('Register'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/ws');
+              },
+              child: Text('ws'),
+            ),
+          ],
+        ),
+      ),
     );
   }
   
