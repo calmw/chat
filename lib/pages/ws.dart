@@ -29,13 +29,13 @@ class _WebSocketRouteState extends State<WebSocketRoute> {
   void initState() {
     super.initState();
     //创建websocket连接
-    _getJwtToken().then((t) async {
-      print(t);
-      jwtToken=t.toString();
-      channel = IOWebSocketChannel.connect(
-          Uri.parse('ws://192.168.0.101:8081/ws?token=$jwtToken'));
-      await channel.ready;
-    });
+    // _getJwtToken().then((t) async {
+    //   print(t);
+    //   jwtToken=t.toString();
+    //   channel = IOWebSocketChannel.connect(
+    //       Uri.parse('ws://192.168.0.101:8081/ws?token=$jwtToken'));
+    //   await channel.ready;
+    // });
 
   }
 

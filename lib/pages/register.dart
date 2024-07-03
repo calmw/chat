@@ -1,28 +1,45 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
+import 'package:image_picker/image_picker.dart';
 import '../models/user.dart';
 import '../storage/shared_preference.dart';
 
-class Register extends StatefulWidget{
+class Register extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return RegisterState();
   }
-  
 }
-class RegisterState extends State<Register>{
+
+class RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
   late String _username = '';
   late String _password = '';
+
+  ///
+  File? _image; // 存储用户选择的图像文件
+  /// 从图库选择图像并更新UI的异步方法。
+  Future<void> _getImage() async {
+    final picker = ImagePicker(); // 创建ImagePicker实例
+    final pickedFile =
+        await picker.pickImage(source: ImageSource.gallery); // 从图库中选择图像
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path); // 将选定的图像文件赋给_image
+      });
+    }
+  }
+
+  ///
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         iconTheme: const IconThemeData(
           color: Colors.white,
@@ -41,13 +58,26 @@ class RegisterState extends State<Register>{
             child: Column(
               children: [
                 const SizedBox(
-                  height: 150,
+                  height: 30,
                 ),
-                Image.asset(
-                  'assets/images/logo.png',
-                  width: 60,
-                  height: 60,
+                ////
+                GestureDetector(
+                  onTap: _getImage, // 点击头像区域时触发_getImage方法
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: _image != null
+                        ? FileImage(_image!)
+                        : null, // 根据_image是否为空设置头像图片
+                    child: _image == null
+                        ? const Icon(
+                            Icons.camera_alt,
+                            size: 50,
+                            color: Colors.white,
+                          )
+                        : null,
+                  ),
                 ),
+                ////
                 const SizedBox(height: 20),
                 TextFormField(
                   autofocus: true,
@@ -148,8 +178,8 @@ class RegisterState extends State<Register>{
                   children: [
                     TextButton(
                         onPressed: () => {
-                          Navigator.pushNamed(context, '/login'),
-                        },
+                              Navigator.pushNamed(context, '/login'),
+                            },
                         child: const Text("去登陆")),
                     TextButton(onPressed: () => {}, child: const Text("忘记密码？")),
                   ],
@@ -160,6 +190,7 @@ class RegisterState extends State<Register>{
     );
   }
 
+  // 登陆
   void _register() async {
     final dio = Dio();
     final response = await dio.post(
@@ -196,4 +227,6 @@ class RegisterState extends State<Register>{
       );
     }
   }
+
+// https://developer.aliyun.com/article/1340683
 }
