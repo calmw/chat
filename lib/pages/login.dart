@@ -3,6 +3,7 @@ import 'package:chat/models/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../storage/shared_preference.dart';
+import '../utils/env.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -124,7 +125,7 @@ class LoginState extends State<Login> {
   void _login() async {
     final dio = Dio();
     final response = await dio.post(
-      'http://192.168.0.101:8080/api/v1/login',
+      Env().getApiHost("API_HOST") + 'api/v1/login',
       data: {"username": _username, "password": _password},
     );
     var res = jsonDecode(response.toString());

@@ -1,6 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:chat/utils/check_login.dart';
+import 'package:chat/utils/dialog.dart';
+import 'package:chat/utils/email_check.dart';
 import 'package:chat/utils/env.dart';
+import 'package:chat/utils/http.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,15 +15,63 @@ import '../storage/shared_preference.dart';
 class Register extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return RegisterState();
   }
 }
 
 class RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
-  late String _username = '';
+  late String _nickname = '';
+  late String _avatar = '';
+  late String _verifyKey = '';
+  late String _email = '';
+  late String _code = '';
   late String _password = '';
+  late Timer _timer;
+  int _secondsRemaining = 60;
+
+  Future<bool> sendCode() async {
+    print(_email);
+    print(998788);
+    if (!Email.checkFormat(_email)) {
+      ErrDialog().showBottomMsg(context, "email 不能为空或email格式错误");
+      return false;
+    }
+    // 发送验证码
+    var res = await HttpUtils.post("api/v1/send_register_email_code",
+        data: {"email": _email});
+    print(res);
+    if (res["code"] != 0) {
+      ErrDialog().showBottomMsg(context, res["message"]);
+      return false;
+    } else {
+      _verifyKey = res["data"]["key"];
+    }
+    return true;
+  }
+
+  Future<void> _startTimer() async {
+    if (_secondsRemaining == 60) {
+      var res = await sendCode();
+      if (!res) {
+        return;
+      }
+    }
+    const oneSec = const Duration(seconds: 1);
+    _timer = Timer.periodic(oneSec, (Timer timer) async {
+      print(_secondsRemaining);
+      if (_secondsRemaining < 1) {
+        timer.cancel();
+        setState(() {
+          _secondsRemaining = 60;
+        });
+      } else {
+        setState(() {
+          _secondsRemaining = _secondsRemaining - 1;
+        });
+      }
+    });
+  }
 
   ///
   File? _image; // 存储用户选择的图像文件
@@ -37,25 +90,38 @@ class RegisterState extends State<Register> {
 
   // 上传图片
   void uploadImage(File image) async {
-    try {
-      var dio = Dio();
-      FormData formData = FormData.fromMap({
-        "avatar":
-            await MultipartFile.fromFile(image.path, filename: "image.jpg"),
-      });
-      var headers = {
-        'Authorization':
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJxMjYzMDc0YmUzNTkwMDM3IiwiZXhwIjoxNzIyNjU3NTk0LCJpc3MiOiJjaGF0In0.ptsblJOu_XqzoikFjcmeViGPC4ALNiIc2V1WinAq2Zk',
-      };
-      var response = await dio.post(Env().getApiHost("API_HOST"),
-          data: formData, options: Options(headers: headers));
-      print(response.data);
-    } catch (e) {
-      print(e);
+    var dio = Dio();
+    FormData formData = FormData.fromMap({
+      "avatar": await MultipartFile.fromFile(image.path, filename: "image.jpg"),
+    });
+
+    Object? token = await SharedPrefer.getJwtToken();
+    var headers = {
+      'Authorization': token.toString(),
+    };
+
+    var response = await dio.post(
+      Env().getApiHost("API_HOST") + "api/v1/upload_image_one",
+      data: formData,
+      options: Options(headers: headers),
+    );
+    var res = jsonDecode(response.toString());
+    CheckLogin().check(res["code"], context);
+    if (res["code"] != 0) {
+      ErrDialog().showBottomMsg(context, res["message"]);
+    } else {
+      _avatar = res['msg'];
     }
   }
 
   ///
+  @override
+  void dispose() {
+    if (_timer != null) {
+      _timer.cancel();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +168,7 @@ class RegisterState extends State<Register> {
                 ////
                 const SizedBox(height: 20),
                 TextFormField(
-                  autofocus: true,
+                  autofocus: false,
                   decoration: const InputDecoration(
                       icon: Icon(Icons.person),
                       labelText: '昵称',
@@ -117,13 +183,14 @@ class RegisterState extends State<Register> {
                     }
                     return null;
                   },
-                  onSaved: (value) => _username = value!,
+                  onChanged: (value) => _nickname = value,
+                  onSaved: (value) => _nickname = value!,
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  autofocus: true,
+                  autofocus: false,
                   decoration: const InputDecoration(
-                      icon: Icon(Icons.person),
+                      icon: Icon(Icons.email),
                       labelText: '邮箱',
                       labelStyle: const TextStyle(
                         fontSize: 18,
@@ -136,32 +203,56 @@ class RegisterState extends State<Register> {
                     }
                     return null;
                   },
-                  onSaved: (value) => _username = value!,
+                  onChanged: (value) => _email = value,
+                  onSaved: (value) => _email = value!,
+                ),
+                const SizedBox(height: 20),
+                Stack(
+                  children: [
+                    TextFormField(
+                      autofocus: false,
+                      decoration: const InputDecoration(
+                          icon: Icon(Icons.confirmation_num),
+                          labelText: '验证码',
+                          labelStyle: const TextStyle(
+                            fontSize: 18,
+                          ),
+                          hintText: "验证码",
+                          hintStyle: TextStyle(fontSize: 16)),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return '请输入邮箱验证码';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) => _code = value,
+                      onSaved: (value) => _code = value!,
+                    ),
+                    Positioned(
+                        right: 0,
+                        top: 5,
+                        child: _secondsRemaining == 60
+                            ? TextButton(
+                                child: Text(
+                                  "发送验证码",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Color.fromRGBO(55, 120, 167, 1)),
+                                ),
+                                onPressed: _startTimer,
+                              )
+                            : TextButton(
+                                child: Text("${_secondsRemaining}秒"),
+                                onPressed: null,
+                              ))
+                  ],
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  autofocus: true,
+                  autofocus: false,
+                  obscureText: true,
                   decoration: const InputDecoration(
-                      icon: Icon(Icons.person),
-                      labelText: '验证码',
-                      labelStyle: const TextStyle(
-                        fontSize: 18,
-                      ),
-                      hintText: "验证码",
-                      hintStyle: TextStyle(fontSize: 16)),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '请输入邮箱验证码';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _username = value!,
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                      icon: Icon(Icons.person),
+                      icon: Icon(Icons.key),
                       labelText: '密码',
                       labelStyle: const TextStyle(
                         fontSize: 18,
@@ -174,7 +265,8 @@ class RegisterState extends State<Register> {
                     }
                     return null;
                   },
-                  onSaved: (value) => _username = value!,
+                  onChanged: (value) => _password = value,
+                  onSaved: (value) => _password = value!,
                 ),
                 const SizedBox(height: 40),
                 ElevatedButton(
@@ -214,39 +306,30 @@ class RegisterState extends State<Register> {
 
   // 注册
   void _register() async {
-    final dio = Dio();
-    final response = await dio.post(
-      'http://192.168.0.101:8080/api/v1/login',
-      data: {"username": _username, "password": _password},
-    );
-    var res = jsonDecode(response.toString());
-    print(res);
+    print({
+      "username": _nickname,
+      "email": _email,
+      "code": _code,
+      "key": _verifyKey,
+      "password": _password,
+    });
+    var res = await HttpUtils.post("api/v1/register", data: {
+      "username": _nickname,
+      "email": _email,
+      "code": _code,
+      "key": _verifyKey,
+      "password": _password,
+    });
     if (res["code"] == 0) {
       var user = User();
       user.uid = res["data"]["uid"];
+      user.email = res["data"]["email"];
       user.jwtToken = res["data"]["access_token"];
       user.nickname = res["data"]["nickname"];
       SharedPrefer.saveUser(user);
-      // Navigator.pushNamed(context, '/index');
       Navigator.pop(context);
     } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("注册失败"),
-            content: Text(res["message"]),
-            actions: [
-              TextButton(
-                child: const Text('确认'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      ErrDialog().showBottomMsg(context, res["message"]);
     }
   }
 
