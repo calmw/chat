@@ -1,7 +1,7 @@
 import 'package:chat/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Utils {
+class SharedPrefer {
   static Future<void> saveUser(User user) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("uid", user.uid);

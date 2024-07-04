@@ -93,7 +93,7 @@ class _WebSocketRouteState extends State<WebSocketRoute> {
   }
 
   Future<Object?> _getJwtToken() async {
-    var t =await Utils.getJwtToken();
+    var t =await SharedPrefer.getJwtToken();
     return t;
   }
 

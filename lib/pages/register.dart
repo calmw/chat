@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:chat/utils/env.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,7 +30,28 @@ class RegisterState extends State<Register> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path); // 将选定的图像文件赋给_image
+        uploadImage(_image!);
       });
+    }
+  }
+
+  // 上传图片
+  void uploadImage(File image) async {
+    try {
+      var dio = Dio();
+      FormData formData = FormData.fromMap({
+        "avatar":
+            await MultipartFile.fromFile(image.path, filename: "image.jpg"),
+      });
+      var headers = {
+        'Authorization':
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJxMjYzMDc0YmUzNTkwMDM3IiwiZXhwIjoxNzIyNjU3NTk0LCJpc3MiOiJjaGF0In0.ptsblJOu_XqzoikFjcmeViGPC4ALNiIc2V1WinAq2Zk',
+      };
+      var response = await dio.post(Env().getApiHost("API_HOST"),
+          data: formData, options: Options(headers: headers));
+      print(response.data);
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -190,7 +212,7 @@ class RegisterState extends State<Register> {
     );
   }
 
-  // 登陆
+  // 注册
   void _register() async {
     final dio = Dio();
     final response = await dio.post(
@@ -204,7 +226,7 @@ class RegisterState extends State<Register> {
       user.uid = res["data"]["uid"];
       user.jwtToken = res["data"]["access_token"];
       user.nickname = res["data"]["nickname"];
-      Utils.saveUser(user);
+      SharedPrefer.saveUser(user);
       // Navigator.pushNamed(context, '/index');
       Navigator.pop(context);
     } else {
@@ -229,4 +251,5 @@ class RegisterState extends State<Register> {
   }
 
 // https://developer.aliyun.com/article/1340683
+//   https://blog.csdn.net/shaoxiukun/article/details/131437843
 }

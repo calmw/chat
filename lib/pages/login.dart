@@ -7,7 +7,6 @@ import '../storage/shared_preference.dart';
 class Login extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return LoginState();
   }
 }
@@ -19,8 +18,8 @@ class LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         iconTheme: const IconThemeData(
           color: Colors.white,
@@ -136,7 +135,7 @@ class LoginState extends State<Login> {
       user.email = res["data"]["email"];
       user.jwtToken = res["data"]["access_token"];
       user.nickname = res["data"]["nickname"];
-      await Utils.saveUser(user);
+      await SharedPrefer.saveUser(user);
       Navigator.pop(context);
     } else {
       showDialog(
