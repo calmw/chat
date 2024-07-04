@@ -1,12 +1,10 @@
 import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/web_socket_channel.dart';
-
-const String SERVER_ADDRESS = 'ws://192.168.0.101:8081/ws';
+import '../env.dart';
 
 class WebSockets {
-
   initCommunication() async {
-    final wsUrl = Uri.parse(SERVER_ADDRESS);
+    final wsUrl = Uri.parse(Env().key("WS_HOST"));
     final channel = WebSocketChannel.connect(wsUrl);
 
     await channel.ready;

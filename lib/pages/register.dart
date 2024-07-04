@@ -22,7 +22,6 @@ class Register extends StatefulWidget {
 class RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
   late String _nickname = '';
-  late String _avatar = '';
   late String _verifyKey = '';
   late String _email = '';
   late String _code = '';
@@ -31,8 +30,6 @@ class RegisterState extends State<Register> {
   int _secondsRemaining = 60;
 
   Future<bool> sendCode() async {
-    print(_email);
-    print(998788);
     if (!Email.checkFormat(_email)) {
       ErrDialog().showBottomMsg(context, "email 不能为空或email格式错误");
       return false;
@@ -59,7 +56,6 @@ class RegisterState extends State<Register> {
     }
     const oneSec = const Duration(seconds: 1);
     _timer = Timer.periodic(oneSec, (Timer timer) async {
-      print(_secondsRemaining);
       if (_secondsRemaining < 1) {
         timer.cancel();
         setState(() {
@@ -73,7 +69,6 @@ class RegisterState extends State<Register> {
     });
   }
 
-  ///
   File? _image; // 存储用户选择的图像文件
   /// 从图库选择图像并更新UI的异步方法。
   Future<void> _getImage() async {
@@ -101,7 +96,7 @@ class RegisterState extends State<Register> {
     };
 
     var response = await dio.post(
-      Env().getApiHost("API_HOST") + "api/v1/upload_image_one",
+      Env().key("API_HOST") + "api/v1/upload_image_one",
       data: formData,
       options: Options(headers: headers),
     );
@@ -109,23 +104,17 @@ class RegisterState extends State<Register> {
     CheckLogin().check(res["code"], context);
     if (res["code"] != 0) {
       ErrDialog().showBottomMsg(context, res["message"]);
-    } else {
-      _avatar = res['msg'];
     }
   }
 
-  ///
   @override
   void dispose() {
-    if (_timer != null) {
       _timer.cancel();
-    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -171,11 +160,11 @@ class RegisterState extends State<Register> {
                   autofocus: false,
                   decoration: const InputDecoration(
                       icon: Icon(Icons.person),
-                      labelText: '昵称',
+                      labelText: '用户名',
                       labelStyle: const TextStyle(
                         fontSize: 18,
                       ),
-                      hintText: "昵称",
+                      hintText: "用户名",
                       hintStyle: TextStyle(fontSize: 16)),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -332,7 +321,4 @@ class RegisterState extends State<Register> {
       ErrDialog().showBottomMsg(context, res["message"]);
     }
   }
-
-// https://developer.aliyun.com/article/1340683
-//   https://blog.csdn.net/shaoxiukun/article/details/131437843
 }

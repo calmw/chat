@@ -48,7 +48,7 @@ class LoginState extends State<Login> {
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
-                  autofocus: true,
+                  autofocus: false,
                   decoration: const InputDecoration(
                       icon: Icon(Icons.person),
                       labelText: '用户名',
@@ -125,7 +125,7 @@ class LoginState extends State<Login> {
   void _login() async {
     final dio = Dio();
     final response = await dio.post(
-      Env().getApiHost("API_HOST") + 'api/v1/login',
+      Env().key("API_HOST") + 'api/v1/login',
       data: {"username": _username, "password": _password},
     );
     var res = jsonDecode(response.toString());

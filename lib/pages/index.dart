@@ -1,3 +1,5 @@
+import 'package:chat/storage/shared_preference.dart';
+import 'package:chat/utils/env.dart';
 import 'package:flutter/material.dart';
 
 class Index extends StatefulWidget {
@@ -8,48 +10,109 @@ class Index extends StatefulWidget {
   }
 }
 
-class IndexState extends State<Index> {
+class IndexState extends State<Index> with TickerProviderStateMixin {
+  late TabController? _tabController;
+  final List<Tab> _myTabs = <Tab>[
+    const Tab(text: "CHATS"),
+    const Tab(
+      text: "CALLS",
+    ),
+  ];
+   late String _username;
+  late String _email;
+  late String _uid;
+
+  @override
+  void initState() {
+    ///初始化构造
+    _tabController = TabController(vsync: this, length: 2, initialIndex: 0);
+
+    ///添加监听
+    ///_tabController(() => _handleTabChange());
+    _tabController?.addListener(() {
+      if (_tabController!.indexIsChanging) {
+        _handleTabChange();
+      }
+    });
+    super.initState();
+
+    Future.delayed(Duration.zero, () => setState(() async {
+      var user = await SharedPrefer.getUser();
+      _username = user!.nickname;
+      _email = user.email;
+      _uid = user.uid;
+    }));
+  }
+
+  void _handleTabChange() {
+    if (_tabController?.index == 0) {
+      print('请求数据1');
+    } else if (_tabController?.index == 1) {
+      print('请求数据2');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("首页"),
-        // leading: ,
-        bottom: const TabBar(
-          tabs: [
-            Tab(icon: Icon(Icons.directions_car)),
-            Tab(icon: Icon(Icons.directions_transit)),
-            Tab(icon: Icon(Icons.directions_bike)),
-          ],
+        backgroundColor: const Color.fromRGBO(55, 120, 167, 1),
+        flexibleSpace: TabBar(
+          controller: _tabController,
+          tabs: _myTabs,
+          //标题，使用 Tab 构造
+          isScrollable: false,
+          //是否可以滑动，标题左右滑动
+          padding: const EdgeInsets.only(top: 60, left: 100, right: 100),
+          indicatorWeight: 5,
+          //指示器高度
+          indicator: const UnderlineTabIndicator(
+              borderSide: BorderSide(width: 2, color: Colors.white),
+              insets: EdgeInsets.only(left: 105, right: 105)),
+          labelColor: Colors.white,
+          //标题选择时颜色
+          unselectedLabelColor: const Color.fromRGBO(201, 221, 244, 1),
+          //未被选择时颜色
+          labelStyle: const TextStyle(fontSize: 18), //被选择时label风格样式
         ),
+        // leading: ,
         actions: [
-          // TextButton(onPressed: ()=>{}, child: Text("CHATS",style: TextStyle(fontSize: 18),)),
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
             onPressed: () => {},
           ),
         ],
+        automaticallyImplyLeading: true,
       ),
       drawer: Drawer(
+        surfaceTintColor: Colors.amber,
+        shadowColor: Colors.amber,
         child: ListView(
           children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountName: Text('John Doe'),
-              accountEmail: Text('johndoe@example.com'),
+             UserAccountsDrawerHeader(
+              accountName: Text("$_username"),
+              accountEmail: Text('$_email'),
               currentAccountPicture: CircleAvatar(
                 backgroundImage:
-                    NetworkImage('https://example.com/profile.jpg'),
+                    NetworkImage(Env().key("STATIC_HOST")+'images/avatar/$_uid.png'),
               ),
             ),
             ListTile(
-              leading: Icon(Icons.home, size: 36.0),
-              title: Text('Home'),
+              leading: const Icon(Icons.home, size: 36.0),
+              title: const Text('Home'),
               onTap: () {},
             ),
             ListTile(
-              leading: Icon(Icons.settings, size: 36.0),
-              title: Text('Settings'),
+              leading: const Icon(Icons.settings, size: 36.0),
+              title: const Text('Settings'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout_outlined, size: 35.0),
+              title: const Text('Logout'),
               onTap: () {},
             ),
             // Add more ListTiles here if needed
@@ -57,58 +120,28 @@ class IndexState extends State<Index> {
         ),
       ),
       body: TabBarView(
+        controller: _tabController,
         children: <Widget>[
-          Container(
-            child: Text("hello"),
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/login');
+            },
+            child: const Text(
+              'Login',
+              style: TextStyle(fontSize: 24),
+            ),
           ),
-          ListView(
-            children: <Widget>[
-              ListTile(
-                title: Text("第二个tab"),
-              )
-            ],
-          ),
-          ListView(
-            children: <Widget>[
-              ListTile(
-                title: Text("第三个tab"),
-              )
-            ],
-          ),
-          ListView(
-            children: <Widget>[
-              ListTile(
-                title: Text("第四个tab"),
-              )
-            ],
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/register');
+            },
+            child: const Text(
+              'Register',
+              style: TextStyle(fontSize: 24),
+            ),
           ),
         ],
       ),
-      // body: Center(
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       ElevatedButton(
-      //         onPressed: () {
-      //           Navigator.pushNamed(context, '/login');
-      //         },
-      //         child: const Text('Login'),
-      //       ),
-      //       ElevatedButton(
-      //         onPressed: () {
-      //           Navigator.pushNamed(context, '/register');
-      //         },
-      //         child: const Text('Register'),
-      //       ),
-      //       ElevatedButton(
-      //         onPressed: () {
-      //           Navigator.pushNamed(context, '/ws');
-      //         },
-      //         child: const Text('ws'),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }
