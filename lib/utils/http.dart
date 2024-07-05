@@ -5,7 +5,7 @@ import 'env.dart';
 
 class HttpUtils {
   static final BaseOptions baseOptions = BaseOptions(
-    baseUrl: Env().key("API_HOST"),
+    baseUrl: Env().get("API_HOST"),
     connectTimeout: const Duration(seconds: 2),
     receiveTimeout: const Duration(seconds: 2),
   );

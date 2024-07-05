@@ -96,7 +96,7 @@ class RegisterState extends State<Register> {
     };
 
     var response = await dio.post(
-      Env().key("API_HOST") + "api/v1/upload_image_one",
+      Env().get("API_HOST") + "api/v1/upload_image_one",
       data: formData,
       options: Options(headers: headers),
     );
@@ -109,7 +109,9 @@ class RegisterState extends State<Register> {
 
   @override
   void dispose() {
+    if (_secondsRemaining < 60) {
       _timer.cancel();
+    }
     super.dispose();
   }
 
@@ -222,17 +224,17 @@ class RegisterState extends State<Register> {
                         top: 5,
                         child: _secondsRemaining == 60
                             ? TextButton(
-                                child: Text(
+                                onPressed: _startTimer,
+                                child: const Text(
                                   "发送验证码",
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: Color.fromRGBO(55, 120, 167, 1)),
                                 ),
-                                onPressed: _startTimer,
                               )
                             : TextButton(
-                                child: Text("${_secondsRemaining}秒"),
                                 onPressed: null,
+                                child: Text("$_secondsRemaining秒"),
                               ))
                   ],
                 ),
@@ -295,13 +297,6 @@ class RegisterState extends State<Register> {
 
   // 注册
   void _register() async {
-    print({
-      "username": _nickname,
-      "email": _email,
-      "code": _code,
-      "key": _verifyKey,
-      "password": _password,
-    });
     var res = await HttpUtils.post("api/v1/register", data: {
       "username": _nickname,
       "email": _email,

@@ -3,6 +3,7 @@ import 'package:chat/models/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../storage/shared_preference.dart';
+import '../utils/dialog.dart';
 import '../utils/env.dart';
 
 class Login extends StatefulWidget {
@@ -125,7 +126,7 @@ class LoginState extends State<Login> {
   void _login() async {
     final dio = Dio();
     final response = await dio.post(
-      Env().key("API_HOST") + 'api/v1/login',
+      Env().get("API_HOST") + 'api/v1/login',
       data: {"username": _username, "password": _password},
     );
     var res = jsonDecode(response.toString());
@@ -137,25 +138,9 @@ class LoginState extends State<Login> {
       user.jwtToken = res["data"]["access_token"];
       user.nickname = res["data"]["nickname"];
       await SharedPrefer.saveUser(user);
-      Navigator.pop(context);
+      Navigator.pushNamed(context, '/');
     } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("登陆失败"),
-            content: Text(res["message"]),
-            actions: [
-              TextButton(
-                child: const Text('确认'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
+      ErrDialog().showBottomMsg(context, res["message"]);
     }
   }
 }
