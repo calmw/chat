@@ -17,7 +17,8 @@ class Socket {
 
   listen() {
     channel.stream.listen((message) {
-      channel.sink.add('received!');
+      print(message);
+      channel.sink.add('ping');
       channel.sink.close(status.goingAway);
     });
   }

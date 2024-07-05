@@ -25,7 +25,7 @@ class ChatsState extends State<Chats> {
     var chatList = await getChatList();
     return ListView.builder(
       itemBuilder: (context, index) {
-        return createItem(index);
+        return createItem(index as String);
       },
       itemCount: chatList.length,
     );
@@ -34,7 +34,7 @@ class ChatsState extends State<Chats> {
   /// 获取子项目
   Widget createItem(String id) {
     // 获取数据
-    var item = SharedPrefer.getChatListItem(id);
+    // var item = SharedPrefer.getChatListItem(id);
     // 构建列表项
     return Row(
       children: [

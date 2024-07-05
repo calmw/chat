@@ -13,6 +13,8 @@ import '../models/user.dart';
 import '../storage/shared_preference.dart';
 
 class Register extends StatefulWidget {
+  const Register({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return RegisterState();
@@ -97,13 +99,13 @@ class RegisterState extends State<Register> {
     };
 
     var response = await dio.post(
-      Env().key("API_HOST") + "api/v1/upload_image_one",
+      Env().get("API_HOST") + "api/v1/upload_image_one",
       data: formData,
       options: Options(headers: headers),
     );
     var res = jsonDecode(response.toString());
     CheckLogin().check(res["code"], context);
-    if (res["code"] != 0) {
+    if (res["code"] == 0) {
       _avatar = res["data"]["uri"];
     } else {
       ErrDialog().showBottomMsg(context, res["message"]);
@@ -160,7 +162,7 @@ class RegisterState extends State<Register> {
                   ),
                 ),
                 ////
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 TextFormField(
                   autofocus: false,
                   decoration: const InputDecoration(
@@ -180,7 +182,7 @@ class RegisterState extends State<Register> {
                   onChanged: (value) => _nickname = value,
                   onSaved: (value) => _nickname = value!,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 TextFormField(
                   autofocus: false,
                   decoration: const InputDecoration(
@@ -200,7 +202,7 @@ class RegisterState extends State<Register> {
                   onChanged: (value) => _email = value,
                   onSaved: (value) => _email = value!,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 Stack(
                   children: [
                     TextFormField(
@@ -241,7 +243,7 @@ class RegisterState extends State<Register> {
                               ))
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 TextFormField(
                   autofocus: false,
                   obscureText: true,
@@ -300,6 +302,15 @@ class RegisterState extends State<Register> {
 
   // 注册
   void _register() async {
+    print({
+      "username": _nickname,
+      "email": _email,
+      "code": _code,
+      "avatar": _avatar,
+      "key": _verifyKey,
+      "password": _password,
+    });
+    // return;
     var res = await HttpUtils.post("api/v1/register", data: {
       "username": _nickname,
       "email": _email,
@@ -311,9 +322,7 @@ class RegisterState extends State<Register> {
     if (res["code"] == 0) {
       var user = User();
       user.uid = res["data"]["uid"];
-      user.email = res["data"]["email"];
       user.jwtToken = res["data"]["access_token"];
-      user.nickname = res["data"]["nickname"];
       SharedPrefer.saveUser(user);
       Navigator.pop(context);
     } else {

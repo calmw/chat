@@ -1,10 +1,12 @@
-import 'package:chat/storage/shared_preference.dart';
 import 'package:chat/utils/env.dart';
 import 'package:flutter/material.dart';
-
 import '../utils/http.dart';
+import 'call.dart';
+import 'chats.dart';
 
 class Index extends StatefulWidget {
+  const Index({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -20,10 +22,11 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
       text: "CALLS",
     ),
   ];
-  late String _username;
-  late String _email;
-  late String _avatar;
-  late String _uid;
+  late String _username = "";
+  late String _email =
+      Env().get("STATIC_HOST") + 'images/avatar/default_user_logo.png';
+  late String _avatar = "";
+  late String _uid = "";
 
   @override
   void initState() {
@@ -31,26 +34,26 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     _tabController = TabController(vsync: this, length: 2, initialIndex: 0);
 
     ///添加监听
-    ///_tabController(() => _handleTabChange());
     _tabController?.addListener(() {
       if (_tabController!.indexIsChanging) {
         _handleTabChange();
       }
     });
     super.initState();
+    getUserInfo();
+  }
 
-    Future.delayed(
-        Duration.zero,
-        () => setState(() async {
-              var res = await HttpUtils.get("api/v1/user_info");
-              print(res);
-              if (res["code"] == 0) {
-                _username = res["data"]["username"];
-                _email = res["data"]["email"];
-                _avatar = res["data"]["avatar"];
-                _uid = res["data"]["user_id"];
-              }
-            }));
+  Future<void> getUserInfo() async {
+    var res = await HttpUtils.get("api/v1/user_info");
+    print(res);
+    if (res["code"] == 0) {
+      setState(() {
+        _username = res["data"]["username"];
+        _email = res["data"]["email"];
+        _avatar = Env().get("STATIC_HOST") +res["data"]["avatar"];
+        _uid = res["data"]["user_id"];
+      });
+    }
   }
 
   void _handleTabChange() {
@@ -116,8 +119,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
                 // ),
               ),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    Env().get("STATIC_HOST") + 'images/avatar/$_uid.png'),
+                backgroundImage: NetworkImage(_avatar),
               ),
             ),
             ListTile(

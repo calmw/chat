@@ -7,6 +7,8 @@ import '../utils/dialog.dart';
 import '../utils/env.dart';
 
 class Login extends StatefulWidget {
+  const Login({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return LoginState();
@@ -134,9 +136,7 @@ class LoginState extends State<Login> {
     if (res["code"] == 0) {
       var user = User();
       user.uid = res["data"]["uid"];
-      user.email = res["data"]["email"];
       user.jwtToken = res["data"]["access_token"];
-      user.nickname = res["data"]["nickname"];
       await SharedPrefer.saveUser(user);
       Navigator.pushNamed(context, '/');
     } else {
