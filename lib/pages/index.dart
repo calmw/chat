@@ -2,6 +2,8 @@ import 'package:chat/storage/shared_preference.dart';
 import 'package:chat/utils/env.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/http.dart';
+
 class Index extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -18,8 +20,9 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
       text: "CALLS",
     ),
   ];
-   late String _username;
+  late String _username;
   late String _email;
+  late String _avatar;
   late String _uid;
 
   @override
@@ -36,12 +39,18 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     });
     super.initState();
 
-    Future.delayed(Duration.zero, () => setState(() async {
-      var user = await SharedPrefer.getUser();
-      _username = user!.nickname;
-      _email = user.email;
-      _uid = user.uid;
-    }));
+    Future.delayed(
+        Duration.zero,
+        () => setState(() async {
+              var res = await HttpUtils.get("api/v1/user_info");
+              print(res);
+              if (res["code"] == 0) {
+                _username = res["data"]["username"];
+                _email = res["data"]["email"];
+                _avatar = res["data"]["avatar"];
+                _uid = res["data"]["user_id"];
+              }
+            }));
   }
 
   void _handleTabChange() {
@@ -92,12 +101,12 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
         shadowColor: Colors.amber,
         child: ListView(
           children: <Widget>[
-             UserAccountsDrawerHeader(
-              accountName: Text("$_username"),
-              accountEmail: Text('$_email'),
+            UserAccountsDrawerHeader(
+              accountName: Text(_username),
+              accountEmail: Text(_email),
               currentAccountPicture: CircleAvatar(
                 backgroundImage:
-                    NetworkImage(Env().key("STATIC_HOST")+'images/avatar/$_uid.png'),
+                    NetworkImage(Env().key("STATIC_HOST") + _avatar),
               ),
             ),
             ListTile(

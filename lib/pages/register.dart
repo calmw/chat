@@ -26,6 +26,7 @@ class RegisterState extends State<Register> {
   late String _email = '';
   late String _code = '';
   late String _password = '';
+  late String _avatar = '';
   late Timer _timer;
   int _secondsRemaining = 60;
 
@@ -103,13 +104,15 @@ class RegisterState extends State<Register> {
     var res = jsonDecode(response.toString());
     CheckLogin().check(res["code"], context);
     if (res["code"] != 0) {
+      _avatar = res["data"]["uri"];
+    } else {
       ErrDialog().showBottomMsg(context, res["message"]);
     }
   }
 
   @override
   void dispose() {
-      _timer.cancel();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -222,17 +225,17 @@ class RegisterState extends State<Register> {
                         top: 5,
                         child: _secondsRemaining == 60
                             ? TextButton(
-                                child: Text(
+                                onPressed: _startTimer,
+                                child: const Text(
                                   "发送验证码",
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: Color.fromRGBO(55, 120, 167, 1)),
                                 ),
-                                onPressed: _startTimer,
                               )
                             : TextButton(
-                                child: Text("${_secondsRemaining}秒"),
                                 onPressed: null,
+                                child: Text("$_secondsRemaining秒"),
                               ))
                   ],
                 ),
@@ -306,6 +309,7 @@ class RegisterState extends State<Register> {
       "username": _nickname,
       "email": _email,
       "code": _code,
+      "avatar": _avatar,
       "key": _verifyKey,
       "password": _password,
     });
