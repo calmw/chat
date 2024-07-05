@@ -1,11 +1,12 @@
 import 'package:chat/storage/shared_preference.dart';
 import 'package:chat/utils/env.dart';
 import 'package:flutter/material.dart';
-
+import 'chats.dart';
 import 'call.dart';
-import 'chat.dart';
 
 class Index extends StatefulWidget {
+  const Index({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -98,9 +99,13 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
         child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text(_username,style: const TextStyle(fontSize: 20),),
+              accountName: Text(
+                _username,
+                style: const TextStyle(fontSize: 20),
+              ),
               accountEmail: Text(_email),
-              decoration: const BoxDecoration(//头部颜色或者图片
+              decoration: const BoxDecoration(
+                //头部颜色或者图片
                 color: Color.fromRGBO(55, 120, 167, 1),
                 // image: DecorationImage(
                 //     image: NetworkImage('http://5b0988e595225.cdn.sohucs.com/images/20171108/e8d0b0ab35b14b33a499d74cbc52b43c.jpeg'),
@@ -111,7 +116,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
                 backgroundImage: NetworkImage(
                     Env().get("STATIC_HOST") + 'images/avatar/$_uid.png'),
               ),
-
             ),
             ListTile(
               leading: const Icon(Icons.home, size: 36.0),
@@ -135,7 +139,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          Chat(),
+          Chats(),
           Call(),
         ],
       ),
