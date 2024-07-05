@@ -1,4 +1,5 @@
 import 'package:chat/utils/env.dart';
+import 'package:chat/utils/socket/socket.dart';
 import 'package:flutter/material.dart';
 import '../utils/http.dart';
 import 'call.dart';
@@ -41,6 +42,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     });
     super.initState();
     getUserInfo();
+    socket();
   }
 
   Future<void> getUserInfo() async {
@@ -54,6 +56,14 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
         _uid = res["data"]["user_id"];
       });
     }
+  }
+
+  Future<void> socket() async {
+    // websocket
+    sockets=Socket();
+   await sockets.newChannel();
+    sockets.heartBeat();
+    sockets.listen();
   }
 
   void _handleTabChange() {
