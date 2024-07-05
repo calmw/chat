@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:chat/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,5 +35,23 @@ class SharedPrefer {
       return jwtToken;
     }
     return "";
+  }
+
+  // 存储JSON数据
+  Future<void> saveJson() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final jsonData = {'key': 'value'};
+    prefs.setString('jsonData', jsonEncode(jsonData));
+  }
+
+// 读取JSON数据
+  Future<Map<String, dynamic>?> getJson() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString('jsonData');
+    if (jsonString != null) {
+      return jsonDecode(jsonString);
+    } else {
+      return null;
+    }
   }
 }

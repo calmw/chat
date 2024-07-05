@@ -112,7 +112,9 @@ class RegisterState extends State<Register> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    if (_secondsRemaining < 60) {
+      _timer.cancel();
+    }
     super.dispose();
   }
 
@@ -298,13 +300,6 @@ class RegisterState extends State<Register> {
 
   // 注册
   void _register() async {
-    print({
-      "username": _nickname,
-      "email": _email,
-      "code": _code,
-      "key": _verifyKey,
-      "password": _password,
-    });
     var res = await HttpUtils.post("api/v1/register", data: {
       "username": _nickname,
       "email": _email,

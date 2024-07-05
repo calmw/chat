@@ -102,11 +102,22 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
         child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text(_username),
+              accountName: Text(
+                _username,
+                style: const TextStyle(fontSize: 20),
+              ),
               accountEmail: Text(_email),
+              decoration: const BoxDecoration(
+                //头部颜色或者图片
+                color: Color.fromRGBO(55, 120, 167, 1),
+                // image: DecorationImage(
+                //     image: NetworkImage('http://5b0988e595225.cdn.sohucs.com/images/20171108/e8d0b0ab35b14b33a499d74cbc52b43c.jpeg'),
+                //     fit: BoxFit.cover
+                // ),
+              ),
               currentAccountPicture: CircleAvatar(
-                backgroundImage:
-                    NetworkImage(Env().key("STATIC_HOST") + _avatar),
+                backgroundImage: NetworkImage(
+                    Env().get("STATIC_HOST") + 'images/avatar/$_uid.png'),
               ),
             ),
             ListTile(
@@ -131,24 +142,8 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/login');
-            },
-            child: const Text(
-              'Login',
-              style: TextStyle(fontSize: 24),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/register');
-            },
-            child: const Text(
-              'Register',
-              style: TextStyle(fontSize: 24),
-            ),
-          ),
+          Chats(),
+          Call(),
         ],
       ),
     );
