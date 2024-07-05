@@ -1,8 +1,9 @@
+import 'package:chat/db/chat_list.dart';
 import 'package:flutter/material.dart';
-
 import '../storage/shared_preference.dart';
+import '../utils/env.dart';
 
-class Chats extends StatefulWidget{
+class Chats extends StatefulWidget {
   const Chats({super.key});
 
   @override
@@ -10,9 +11,9 @@ class Chats extends StatefulWidget{
     // TODO: implement createState
     return ChatsState();
   }
-  
 }
-class ChatsState extends State<Chats>{
+
+class ChatsState extends State<Chats> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -20,12 +21,13 @@ class ChatsState extends State<Chats>{
   }
 
   //
-  buildList() {
+  buildList() async {
+    var chatList = await getChatList();
     return ListView.builder(
       itemBuilder: (context, index) {
         return createItem(index);
       },
-      itemCount: 20,
+      itemCount: chatList.length,
     );
   }
 
@@ -44,5 +46,4 @@ class ChatsState extends State<Chats>{
       ],
     );
   }
-
 }

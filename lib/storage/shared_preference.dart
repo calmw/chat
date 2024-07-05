@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:chat/chat_list.dart';
 import 'package:chat/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,24 +52,6 @@ class SharedPrefer {
       return jsonDecode(jsonString);
     } else {
       return null;
-    }
-  }
-
-  // 存储JSON数组到shared_preferences
-  Future<void> saveChatListArray(List<ChatList> jsonArray) async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString = json.encode(jsonArray);
-    prefs.setString('chat_list', jsonString);
-  }
-
-// 从shared_preferences读取JSON数组
-  Future<List<dynamic>> getChatListArray() async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString = prefs.getString('chat_list');
-    if (jsonString != null) {
-      return json.decode(jsonString);
-    } else {
-      return [];
     }
   }
 }
