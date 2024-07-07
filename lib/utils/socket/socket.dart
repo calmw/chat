@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:chat/db/msg.dart';
 import 'package:chat/db/new_msg.dart';
 import 'package:chat/storage/shared_preference.dart';
 import 'package:chat/utils/env.dart';
-import 'package:web_socket_channel/status.dart' as status;
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../db/chat_list.dart';
@@ -32,11 +30,11 @@ class Socket {
         // 单聊
         if (msg['data_type'] == 1) {
           await createMsgTable();
-          print(123123);
           await createChatListTable();
-          print(897868);
 
           await NewMsg().doNewMsg();
+          var list =await getChatList();
+          print(list);
         }
       }
       // channel.sink.add('ping');

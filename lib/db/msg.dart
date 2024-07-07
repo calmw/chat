@@ -6,11 +6,8 @@ import 'msg.dart';
 class Msg {
   final int? id;
   final int? mid;
-
-  // final String? uid; // 不需要，只存储跟自己相关的
   final String? sender;
   final String? receiver; // 好友用户ID或者群/channel ID
-  // final String? gid;
   final String? content;
   final int? msgType;
   final int? groupType;
@@ -53,7 +50,7 @@ class Msg {
 //创建 Msg 表
 createMsgTable() async {
   openDatabase(
-    join(await getDatabasesPath(), 'chat.db'),
+    join(await getDatabasesPath(), 'msg.db'),
     onCreate: (db, version) {
       var sql =
           "CREATE TABLE IF NOT EXISTS msg (id INTEGER PRIMARY KEY, mid INTEGER, sender TEXT , receiver TEXT , content TEXT , msgType INTEGER , groupType INTEGER , createTime INTEGER)";
@@ -67,7 +64,7 @@ createMsgTable() async {
 // 插入Msg
 insertOrUpdateMsg(Msg msg) async {
   final db = await openDatabase(
-    join(await getDatabasesPath(), 'chat.db'),
+    join(await getDatabasesPath(), 'msg.db'),
   );
 
   ///
@@ -97,7 +94,7 @@ insertOrUpdateMsg(Msg msg) async {
 // 查询Msg列表
 Future<List<Msg>> getMsg() async {
   final db = await openDatabase(
-    join(await getDatabasesPath(), 'chat.db'),
+    join(await getDatabasesPath(), 'msg.db'),
   );
   final List<Map<String, Object?>> MsgMaps = await db.query('msg');
   return [
@@ -119,7 +116,7 @@ Future<List<Msg>> getMsg() async {
 updateMsg() {
   Future<void> updateDog(Msg Msg) async {
     final db = await openDatabase(
-      join(await getDatabasesPath(), 'chat.db'),
+      join(await getDatabasesPath(), 'msg.db'),
     );
 
     await db.update(
@@ -135,7 +132,7 @@ updateMsg() {
 deleteMsg() {
   Future<void> deleteMsg(String id) async {
     final db = await openDatabase(
-      join(await getDatabasesPath(), 'chat.db'),
+      join(await getDatabasesPath(), 'msg.db'),
     );
     await db.delete(
       'msg',

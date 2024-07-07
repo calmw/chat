@@ -12,21 +12,14 @@ class NewMsg {
     // 拉取最新消息
     var res = await HttpUtils.post("api/v1/get_not_read_msg",
         data: {"current_mid": currentMid});
-    print(1);
-    print(currentMid);
-    print(2);
-    print(res);
     if (res["code"] != 0) {
       return;
     }
 
     /// 处理未读消息
-    await SharedPrefer.setCurrentMid(res['data']["current_mid"]);
+    // await SharedPrefer.setCurrentMid(res['data']["current_mid"]);
     for (var i = 0; i < res['data']["chats"].length; i++) {
       var cid = res['data']["chats"][i]["from"];
-      print(22);
-      print(res['data']["chats"][i]);
-      print(33);
       if (res['data']["chats"][i]["group_type"] > 1) {
         cid = res['data']["chats"][i]["gid"];
       }
@@ -42,16 +35,6 @@ class NewMsg {
           res['data']["chats"][i]["createTime"]));
       // 更新chatList
       await insertOrUpdateChatList(
-        //         final int? id;
-        //   final String? receiver;
-        //   final String? sender;
-        //   final String? senderUsername;
-        //   final String? senderAvatar;
-        //   final int? groutType;
-        //   final int? notReadMsgNo;
-        //   final String? latestMsg;
-        //   final int? latestMsgType;
-        //   final int? latestMsgTime;
         ChatList(
           res['data']["chats"][i]["id"],
           res['data']["chats"][i]["receiver"],
@@ -59,7 +42,7 @@ class NewMsg {
           res['data']["chats"][i]["sender_username"],
           res['data']["chats"][i]["sender_avatar"],
           res['data']["chats"][i]["group_type"],
-          res["not_read_no"],
+          res['data']["not_read_no"],
           res['data']["chats"][i]["content"],
           res['data']["chats"][i]["msg_type"],
           res['data']["chats"][i]["create_time"]
