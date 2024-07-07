@@ -13,7 +13,7 @@ class Msg {
   // final String? gid;
   final String? content;
   final int? msgType;
-  final int? groutType;
+  final int? groupType;
   final int? createTime;
 
   const Msg(
@@ -23,7 +23,7 @@ class Msg {
     this.receiver,
     this.content,
     this.msgType,
-    this.groutType,
+    this.groupType,
     this.createTime,
   );
 
@@ -36,7 +36,7 @@ class Msg {
       'receiver': receiver,
       'content': content,
       'msgType': msgType,
-      'groutType': groutType,
+      'groupType': groupType,
       'createTime': createTime,
     };
   }
@@ -44,7 +44,7 @@ class Msg {
   // 为了打印数据
   @override
   String toString() {
-    return 'Msg{id: $id, mid: $mid, sender: $sender, receiver: $receiver, content: $content, msgType: $msgType, groutType: $groutType, createTime: $createTime}';
+    return 'Msg{id: $id, mid: $mid, sender: $sender, receiver: $receiver, content: $content, msgType: $msgType, groupType: $groupType, createTime: $createTime}';
   }
 }
 
@@ -108,10 +108,10 @@ Future<List<Msg>> getMsg() async {
           'receiver': receiver as String,
           'content': content as String,
           'msgType': msgType as int,
-          'groutType': groutType as int,
+          'groupType': groupType as int,
           'createTime': createTime as int,
         } in MsgMaps)
-      Msg(id, mid, sender, receiver, content, msgType, groutType, createTime),
+      Msg(id, mid, sender, receiver, content, msgType, groupType, createTime),
   ];
 }
 

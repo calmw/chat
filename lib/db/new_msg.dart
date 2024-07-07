@@ -42,16 +42,27 @@ class NewMsg {
           res['data']["chats"][i]["createTime"]));
       // 更新chatList
       await insertOrUpdateChatList(
+        //         final int? id;
+        //   final String? receiver;
+        //   final String? sender;
+        //   final String? senderUsername;
+        //   final String? senderAvatar;
+        //   final int? groutType;
+        //   final int? notReadMsgNo;
+        //   final String? latestMsg;
+        //   final int? latestMsgType;
+        //   final int? latestMsgTime;
         ChatList(
           res['data']["chats"][i]["id"],
-          cid,
-          res['data']["chats"][i]["sender_nickname"],
+          res['data']["chats"][i]["receiver"],
+          res['data']["chats"][i]["sender"],
+          res['data']["chats"][i]["sender_username"],
           res['data']["chats"][i]["sender_avatar"],
-          res['data']["chats"][i]["groutType"],
+          res['data']["chats"][i]["group_type"],
           res["not_read_no"],
-          res['data']["chats"][i]["latestMsg"],
-          res['data']["chats"][i]["latestMsgType"],
-          res['data']["chats"][i]["latestMsgTime"],
+          res['data']["chats"][i]["content"],
+          res['data']["chats"][i]["msg_type"],
+          res['data']["chats"][i]["create_time"]
         ),
       );
     }

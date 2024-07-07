@@ -2,7 +2,8 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ChatList {
-  final String? id;
+  final int? id;
+  final String? receiver;
   final String? sender;
   final String? senderUsername;
   final String? senderAvatar;
@@ -14,6 +15,7 @@ class ChatList {
 
   const ChatList(
       this.id,
+      this.receiver,
       this.sender,
       this.senderUsername,
       this.senderAvatar,
@@ -27,6 +29,7 @@ class ChatList {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'receiver': receiver,
       'sender': sender,
       'senderUsername': senderUsername,
       'senderAvatar': senderAvatar,
@@ -41,7 +44,7 @@ class ChatList {
   // 为了打印数据
   @override
   String toString() {
-    return 'ChatList{id: $id,sender: $sender, senderUsername: $senderUsername, senderAvatar: $senderAvatar, groutType: $groutType, notReadMsgNo: $notReadMsgNo, latestMsg: $latestMsg, latestMsgType: $latestMsgType, latestMsgTime: $latestMsgTime}';
+    return 'ChatList{receiver: $receiver,sender: $sender, senderUsername: $senderUsername, senderAvatar: $senderAvatar, groutType: $groutType, notReadMsgNo: $notReadMsgNo, latestMsg: $latestMsg, latestMsgType: $latestMsgType, latestMsgTime: $latestMsgTime}';
   }
 }
 
@@ -52,23 +55,10 @@ createChatListTable() async {
   openDatabase(
     join(await getDatabasesPath(), 'chat.db'),
     onCreate: (db, version) {
-      return db.execute(
-        '''
-        DROP TABLE IF EXISTS `chat_list`;
-        CREATE TABLE `chat_list` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `sender` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `senderUsername` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `senderAvatar` varchar(256) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `group_type` int DEFAULT NULL,
-  `notReadMsgNo` int DEFAULT NULL,
-  `latestMsg` varchar(600) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `latestMsgType` int DEFAULT NULL,
-  `latestMsgTime` bigint DEFAULT NULL,
-  PRIMARY KEY (`id`),
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-''',
-      );
+      var sql =
+          "CREATE TABLE IF NOT EXISTS chat_list (id INTEGER PRIMARY KEY,receiver TEXT,sender TEXT,senderUsername TEXT,senderAvatar TEXT,group_type INTEGER,notReadMsgNo INTEGER,latestMsg TEXT,latestMsgType INTEGER,latestMsgTime INTEGER)";
+      print(sql);
+      return db.execute(sql);
     },
     version: 1,
   );
@@ -91,19 +81,12 @@ Future<List<ChatList>> getChatList() async {
   final db = await openDatabase(
     join(await getDatabasesPath(), 'chat.db'),
   );
-//  final String? id;
-//   final String? sender;
-//   final String? senderUsername;
-//   final String? senderAvatar;
-//   final int? groutType;
-//   final int? notReadMsgNo;
-//   final String? latestMsg;
-//   final int? latestMsgType;
-//   final int? latestMsgTime;
+
   final List<Map<String, Object?>> chatListMaps = await db.query('chat_list');
   return [
     for (final {
-          'id': id as String,
+          'id': id as int,
+          'receiver': receiver as String,
           'sender': sender as String,
           'senderUsername': senderUsername as String,
           'senderAvatar': senderAvatar as String,
@@ -113,8 +96,8 @@ Future<List<ChatList>> getChatList() async {
           'latestMsgType': latestMsgType as int,
           'latestMsgTime': latestMsgTime as int,
         } in chatListMaps)
-      ChatList(id, sender, senderUsername, senderAvatar, groutType, notReadMsgNo, latestMsg,
-          latestMsgType, latestMsgTime),
+      ChatList(id, receiver, sender, senderUsername, senderAvatar, groutType,
+          notReadMsgNo, latestMsg, latestMsgType, latestMsgTime),
   ];
 }
 
@@ -126,7 +109,7 @@ insertOrUpdateChatList(ChatList chatList) async {
 
   /// 查询
   // 构建查询语句
-  String query = 'SELECT * FROM chat_list WHERE id = ${chatList.id}';
+  String query = 'SELECT * FROM chat_list WHERE id = ${chatList.receiver}';
   // 查询数据
   final List<Map<String, dynamic>> maps = await db.rawQuery(query);
   if (maps.isNotEmpty) {
@@ -135,7 +118,7 @@ insertOrUpdateChatList(ChatList chatList) async {
       'chat_list',
       chatList.toMap(),
       where: 'id = ?',
-      whereArgs: [chatList.id],
+      whereArgs: [chatList.receiver],
     );
   } else {
     // 插入

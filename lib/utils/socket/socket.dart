@@ -32,7 +32,9 @@ class Socket {
         // 单聊
         if (msg['data_type'] == 1) {
           await createMsgTable();
-          // await createChatListTable();
+          print(123123);
+          await createChatListTable();
+          print(897868);
 
           await NewMsg().doNewMsg();
         }
