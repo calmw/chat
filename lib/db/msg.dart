@@ -1,8 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'msg.dart';
-
 class Msg {
   final int? id;
   final int? mid;
