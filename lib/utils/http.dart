@@ -47,7 +47,9 @@ class HttpUtils {
       ;
     } on DioException catch (e) {
       // 处理错误
+      print(5);
       print(e.message);
+      print(6);
       var err = Map();
       err["code"] = -1;
       err["message"] = "服务器繁忙";

@@ -47,7 +47,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
 
   Future<void> getUserInfo() async {
     var res = await HttpUtils.get("api/v1/user_info");
-    print(res);
     if (res["code"] == 0) {
       setState(() {
         _username = res["data"]["username"];

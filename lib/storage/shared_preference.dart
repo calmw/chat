@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:chat/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,6 +32,18 @@ class SharedPrefer {
       return jwtToken;
     }
     return "";
+  }
+
+  static Future<Object?> getCurrentMid() async {
+    final prefs = await SharedPreferences.getInstance();
+    final currentMid = prefs.getInt("current_mid");
+    return currentMid ?? 1;
+  }
+
+  static Future<Object?> setCurrentMid(int currentMid) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt("current_mid", currentMid);
+    return null;
   }
 
   // 存储JSON数据
