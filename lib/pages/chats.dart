@@ -14,35 +14,77 @@ class Chats extends StatefulWidget {
 }
 
 class ChatsState extends State<Chats> {
+  late List<ChatList> _chatList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getChatList();
+  }
+
+  _getChatList() async {
+    _chatList = await getChatList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Text("data");
+    return buildList();
   }
 
   //
-  buildList() async {
-    var chatList = await getChatList();
+  buildList() {
     return ListView.builder(
       itemBuilder: (context, index) {
-        return createItem(index as String);
+        return createItem(index);
       },
-      itemCount: chatList.length,
+      itemCount: _chatList.length,
     );
   }
 
   /// 获取子项目
-  Widget createItem(String id) {
-    // 获取数据
-    // var item = SharedPrefer.getChatListItem(id);
-    // 构建列表项
+  Widget createItem(int index) {
     return Row(
       children: [
         CircleAvatar(
           radius: 50,
           backgroundImage: NetworkImage(
-              Env().get("STATIC_HOST") + 'images/avatar/t263074c11936123.png'),
-        ), // 根据_image是否为空设置头像图片
+              Env().get("STATIC_HOST") + _chatList[index].senderAvatar),
+        ),
+        Column(
+          children: [
+            Stack(
+              children: [
+    Align(
+    alignment: const Alignment(1, 1),
+    child: Text("用户名"),
+    ),
+    Align(
+    alignment: const Alignment(-1, 1),
+    child: Text("时间"),
+    ),
+                // Positioned(
+                //   right: 0,
+                //     child: Text("时间")
+                // )
+              ],
+            ),
+             Row(
+              children: [
+                // Text(_chatList[index].senderUsername ?? ""),
+                Text("用户名"),
+                Text("时间"),
+
+              ],
+            ),
+            _chatList[index].groupType! > 1 ? Row(
+              children: [
+                const Text("用户名"),
+                Text(_chatList[index].latestMsg!),
+              ],
+            ):
+            Text(_chatList[index].latestMsg!),
+          ],
+        )
       ],
     );
   }
