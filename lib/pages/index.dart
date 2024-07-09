@@ -45,6 +45,12 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     socket();
   }
 
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
+
   Future<void> getUserInfo() async {
     var res = await HttpUtils.get("api/v1/user_info");
     if (res["code"] == 0) {
