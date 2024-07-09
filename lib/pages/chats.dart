@@ -1,5 +1,6 @@
 import 'package:chat/db/chat_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../utils/env.dart';
 
 class Chats extends StatefulWidget {
@@ -12,7 +13,7 @@ class Chats extends StatefulWidget {
   }
 }
 
-class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin{
+class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
   final ScrollController _controller = ScrollController();
   late List<ChatList> _chatList = [];
   String userPrivateProtocol =
@@ -58,13 +59,14 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin{
     return Row(
       children: [
         SizedBox(
-          width: 100, // 左侧宽度
+          width: 80.w, // 左侧宽度
+          height: 100.h,
           child: Container(
-            width: 80,
-            height: 80,
-            margin: const EdgeInsets.all(10),
+            width: 80.w,
+            height: 80.h,
+            margin: const EdgeInsets.fromLTRB(10,10,10,10),
             child: CircleAvatar(
-              radius: 60,
+              radius: 60.w,
               backgroundImage: NetworkImage(
                   Env().get("STATIC_HOST") + _chatList[index].senderAvatar),
             ),
@@ -72,13 +74,13 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin{
         ),
         Expanded(
           child: Container(
-              height: 100,
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     color: Colors.blue,
-              //     width: 1, // 边框宽度
-              //   ),
-              // ),
+              height: 70.h,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.blue,
+                  width: 1, // 边框宽度
+                ),
+              ),
               child: Column(
                 children: [
                   Row(
@@ -86,22 +88,24 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin{
                     children: [
                       Text(
                         "${_chatList[index].senderUsername}",
-                        style: const TextStyle(fontSize: 20, height: 1.8),
+                        style: TextStyle(fontSize: 12.sp, height: 1.5.h),
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           const Icon(
                             Icons.check_circle,
                             color: Colors.green,
-                            size: 20,
+                            size: 30,
                           ),
                           Text(
                             messageTime(
                                 _chatList[index].latestMsgTime! ~/ 1000),
-                            style: const TextStyle(
-                                fontSize: 20,
+                            style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold,
-                                height: 1.4),
+                                height: 1.5.h),
                           ),
                         ],
                       ),
@@ -116,17 +120,19 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin{
                             //必传文本
                             text: TextSpan(
                               text: userPrivateProtocol,
-                              style: const TextStyle(
-                                  color: Colors.grey, fontSize: 20),
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14.sp,
+                                  height: 1.2.h),
                             )),
                       )
                     ],
                   ),
                   const SizedBox(
-                    height: 2,
+                    height: 5,
                   ),
                   const Divider(
-                    height: 2.0, // 划线的高度
+                    height: 1, // 划线的高度
                     color: Colors.black, // 划线的颜色
                     // 其他属性...
                   ),

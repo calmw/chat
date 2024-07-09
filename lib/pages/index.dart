@@ -1,3 +1,4 @@
+import 'package:chat/storage/shared_preference.dart';
 import 'package:chat/utils/env.dart';
 import 'package:chat/utils/socket/socket.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
       setState(() {
         _username = res["data"]["username"];
         _email = res["data"]["email"];
-        _avatar = Env().get("STATIC_HOST") +res["data"]["avatar"];
+        _avatar = Env().get("STATIC_HOST") + res["data"]["avatar"];
         _uid = res["data"]["user_id"];
       });
     }
@@ -65,8 +66,8 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
 
   Future<void> socket() async {
     // websocket
-    sockets=Socket();
-   await sockets.newChannel();
+    sockets = Socket();
+    await sockets.newChannel();
     sockets.heartBeat();
     sockets.listen();
   }
@@ -140,7 +141,9 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
             ListTile(
               leading: const Icon(Icons.home, size: 36.0),
               title: const Text('Home'),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, '/');
+              },
             ),
             ListTile(
               leading: const Icon(Icons.settings, size: 36.0),
@@ -150,7 +153,10 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
             ListTile(
               leading: const Icon(Icons.logout_outlined, size: 35.0),
               title: const Text('Logout'),
-              onTap: () {},
+              onTap: () async {
+                await SharedPrefer.logOut();
+                Navigator.pushNamed(context, '/login');
+              },
             ),
             // Add more ListTiles here if needed
           ],

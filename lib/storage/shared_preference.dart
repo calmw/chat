@@ -13,15 +13,20 @@ class SharedPrefer {
   static Future<User?> getUser() async {
     final prefs = await SharedPreferences.getInstance();
     final uid = prefs.getString("uid");
-    final email = prefs.getString("email");
-    final nickname = prefs.getString("nickname");
     final jwtToken = prefs.getString("jwt_token");
-    if (uid != null && email != null && nickname != null && jwtToken != null) {
+    if (uid != null && jwtToken != null) {
       var user = User();
       user.uid = uid;
       user.jwtToken = jwtToken;
       return user;
     }
+    return null;
+  }
+
+  static Future<User?> logOut() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove("uid");
+    prefs.remove("jwt_token");
     return null;
   }
 
