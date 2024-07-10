@@ -94,9 +94,10 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           const Icon(
-                            Icons.check_circle,
-                            color: Colors.green,
-                            size: 30,
+                            Icons.done_rounded,
+                            // Icons.done_all_rounded,
+                            color: Color.fromRGBO(100, 161, 193, 1),
+                            size: 20,
                           ),
                           Text(
                             messageTime(
