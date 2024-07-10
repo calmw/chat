@@ -2,6 +2,9 @@ import 'package:chat/storage/shared_preference.dart';
 import 'package:chat/utils/env.dart';
 import 'package:chat/utils/socket/socket.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../db/chat_list.dart';
+import '../db/msg.dart';
 import '../utils/http.dart';
 import 'call.dart';
 import 'chats.dart';
@@ -42,6 +45,8 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
       }
     });
     super.initState();
+    createMsgTable();
+    createChatListTable();
     getUserInfo();
     socket();
   }
@@ -65,7 +70,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
   }
 
   Future<void> socket() async {
-    // websocket
     sockets = Socket();
     await sockets.newChannel();
     sockets.heartBeat();
@@ -94,9 +98,9 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
           padding: const EdgeInsets.only(top: 60, left: 100, right: 100),
           indicatorWeight: 5,
           //指示器高度
-          indicator: const UnderlineTabIndicator(
-              borderSide: BorderSide(width: 2, color: Colors.white),
-              insets: EdgeInsets.only(left: 105, right: 105)),
+          indicator:  UnderlineTabIndicator(
+              borderSide: const BorderSide(width: 2, color: Colors.white),
+              insets: EdgeInsets.only(left: 60.w, right: 60.w)),
           labelColor: Colors.white,
           //标题选择时颜色
           unselectedLabelColor: const Color.fromRGBO(201, 221, 244, 1),

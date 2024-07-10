@@ -75,12 +75,12 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
         Expanded(
           child: Container(
               height: 70.h,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.blue,
-                  width: 1, // 边框宽度
-                ),
-              ),
+              // decoration: BoxDecoration(
+              //   border: Border.all(
+              //     color: Colors.blue,
+              //     width: 1, // 边框宽度
+              //   ),
+              // ),
               child: Column(
                 children: [
                   Row(
@@ -88,7 +88,7 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
                     children: [
                       Text(
                         "${_chatList[index].senderUsername}",
-                        style: TextStyle(fontSize: 12.sp, height: 1.5.h),
+                        style: TextStyle(fontSize: 18.sp, height: 1.h,color: Colors.black,fontWeight: FontWeight.bold),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -105,35 +105,41 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
                                 fontSize: 12.sp,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
-                                height: 1.5.h),
+                                height: 1.h),
                           ),
                         ],
                       ),
                     ],
                   ),
+
                   Row(
                     children: [
                       Expanded(
-                        child: RichText(
-                            maxLines: 2,
-                            overflow: TextOverflow.clip,
-                            //必传文本
-                            text: TextSpan(
-                              text: userPrivateProtocol,
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14.sp,
-                                  height: 1.2.h),
-                            )),
+                        child: SizedBox(
+                          height: 58,
+                          child: RichText(
+                              maxLines: 2,
+                              overflow: TextOverflow.clip,
+                              //必传文本
+                              text: TextSpan(
+                                text: _chatList[index].latestMsg,
+                                // text: userPrivateProtocol,
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14.sp,
+                                    height: 1.25.h),
+                              )),
+                        )
                       )
                     ],
                   ),
+
                   const SizedBox(
-                    height: 5,
+                    height: 7,
                   ),
                   const Divider(
                     height: 1, // 划线的高度
-                    color: Colors.black, // 划线的颜色
+                    color: Colors.black12, // 划线的颜色
                     // 其他属性...
                   ),
                 ],

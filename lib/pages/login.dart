@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:chat/models/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../storage/shared_preference.dart';
 import '../utils/dialog.dart';
 import '../utils/env.dart';
@@ -52,11 +53,12 @@ class LoginState extends State<Login> {
                 const SizedBox(height: 20),
                 TextFormField(
                   autofocus: false,
-                  decoration: const InputDecoration(
-                      icon: Icon(Icons.person),
+                  style: TextStyle(color: Colors.black54, fontSize: 18.sp),
+                  decoration:  InputDecoration(
+                      icon: const Icon(Icons.person),
                       labelText: '用户名',
-                      labelStyle: const TextStyle(
-                        fontSize: 18,
+                      labelStyle:  TextStyle(
+                        fontSize: 18.sp,
                       ),
                       hintText: "昵称/邮箱",
                       hintStyle: TextStyle(fontSize: 16)),
@@ -70,17 +72,15 @@ class LoginState extends State<Login> {
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  style: const TextStyle(
-                    fontSize: 18,
-                  ),
-                  decoration: const InputDecoration(
-                      icon: Icon(Icons.lock),
+                  style: TextStyle(color: Colors.black54, fontSize: 18.sp),
+                  decoration:  InputDecoration(
+                      icon: const Icon(Icons.lock),
                       labelText: '密码',
-                      labelStyle: const TextStyle(
-                        fontSize: 18,
+                      labelStyle: TextStyle(
+                        fontSize: 18.sp,
                       ),
                       hintText: "昵称/邮箱",
-                      hintStyle: TextStyle(fontSize: 16)),
+                      hintStyle: const TextStyle(fontSize: 16)),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return '请输入密码';
@@ -144,3 +144,8 @@ class LoginState extends State<Login> {
     }
   }
 }
+
+// cisco1: s263472546b45826
+// cisco2: q26347288c17fc21 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJxMjYzNDcyODhjMTdmYzIxIiwiZXhwIjoxNzIzMTg2ODAwLCJpc3MiOiJjaGF0In0.TxhrkXwBMs2wkdIlDxOSA4-7DTmqQcvnZgeOL7p89Y8
+// cisco3: y263472928f39fce eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJ5MjYzNDcyOTI4ZjM5ZmNlIiwiZXhwIjoxNzIzMTg2ODIyLCJpc3MiOiJjaGF0In0.s87NgzxeznaBKWCvZUVwGrverUWvpO4kDaWkz0ykOyk
+// cisco1:

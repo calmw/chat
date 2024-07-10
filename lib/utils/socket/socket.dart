@@ -16,6 +16,7 @@ class Socket {
   newChannel() async {
     var token = await SharedPrefer.getJwtToken();
     var wsUrl = Uri.parse(Env().get("WS_HOST") + '?token=$token');
+    print(wsUrl);
     channel = WebSocketChannel.connect(wsUrl);
     await channel.ready;
   }
@@ -29,9 +30,6 @@ class Socket {
         print(msg['content']);
         // 单聊
         if (msg['data_type'] == 1) {
-          await createMsgTable();
-          await createChatListTable();
-
           await NewMsg().doNewMsg();
           var list =await getChatList();
           print(list);

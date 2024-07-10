@@ -8,6 +8,7 @@ import 'package:chat/utils/env.dart';
 import 'package:chat/utils/http.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/user.dart';
 import '../storage/shared_preference.dart';
@@ -164,18 +165,22 @@ class RegisterState extends State<Register> {
                 ////
                 const SizedBox(height: 15),
                 TextFormField(
+                  style: TextStyle(color: Colors.black54, fontSize: 18.sp),
                   autofocus: false,
-                  decoration: const InputDecoration(
-                      icon: Icon(Icons.person),
+                  decoration: InputDecoration(
+                      icon: const Icon(Icons.person),
+                      // filled: true,
+                      // fillColor: const Color.fromRGBO(253, 247, 254, 1),
                       labelText: '用户名',
-                      labelStyle: const TextStyle(
-                        fontSize: 18,
+                      labelStyle: TextStyle(
+                        fontSize: 18.sp,
                       ),
                       hintText: "用户名",
-                      hintStyle: TextStyle(fontSize: 16)),
+                      hintStyle:
+                          TextStyle(fontSize: 16.sp,)),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return '请输入昵称';
+                      return '请输入用户名';
                     }
                     return null;
                   },
@@ -184,15 +189,16 @@ class RegisterState extends State<Register> {
                 ),
                 const SizedBox(height: 15),
                 TextFormField(
+                  style: TextStyle(color: Colors.black54, fontSize: 18.sp),
                   autofocus: false,
-                  decoration: const InputDecoration(
-                      icon: Icon(Icons.email),
+                  decoration:  InputDecoration(
+                      icon: const Icon(Icons.email),
                       labelText: '邮箱',
-                      labelStyle: const TextStyle(
-                        fontSize: 18,
+                      labelStyle:  TextStyle(
+                        fontSize: 18.sp,
                       ),
                       hintText: "邮箱",
-                      hintStyle: TextStyle(fontSize: 16)),
+                      hintStyle: const TextStyle(fontSize: 16)),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return '请输入邮箱';
@@ -206,12 +212,13 @@ class RegisterState extends State<Register> {
                 Stack(
                   children: [
                     TextFormField(
+                      style: TextStyle(color: Colors.black54, fontSize: 18.sp),
                       autofocus: false,
-                      decoration: const InputDecoration(
-                          icon: Icon(Icons.confirmation_num),
+                      decoration:  InputDecoration(
+                          icon:const Icon(Icons.confirmation_num),
                           labelText: '验证码',
-                          labelStyle: const TextStyle(
-                            fontSize: 18,
+                          labelStyle: TextStyle(
+                            fontSize: 18.sp,
                           ),
                           hintText: "验证码",
                           hintStyle: TextStyle(fontSize: 16)),
@@ -245,16 +252,17 @@ class RegisterState extends State<Register> {
                 ),
                 const SizedBox(height: 15),
                 TextFormField(
+                  style: TextStyle(color: Colors.black54, fontSize: 18.sp),
                   autofocus: false,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                      icon: Icon(Icons.key),
+                  decoration:  InputDecoration(
+                      icon:const Icon(Icons.key),
                       labelText: '密码',
-                      labelStyle: const TextStyle(
-                        fontSize: 18,
+                      labelStyle:  TextStyle(
+                        fontSize: 18.sp,
                       ),
                       hintText: "密码",
-                      hintStyle: TextStyle(fontSize: 16)),
+                      hintStyle: const TextStyle(fontSize: 16)),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return '请输入密码';
