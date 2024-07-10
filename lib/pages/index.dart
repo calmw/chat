@@ -27,6 +27,10 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
       text: "CALLS",
     ),
   ];
+  final List<Widget> tabBarViewChildren = <Widget>[
+    Chats(),
+    Call(),
+  ];
   late String _username = "";
   late String _email =
       Env().get("STATIC_HOST") + 'images/avatar/default_user_logo.png';
@@ -35,6 +39,9 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    // 登陆检测
+    checkLogin();
+
     ///初始化构造
     _tabController = TabController(vsync: this, length: 2, initialIndex: 0);
 
@@ -69,6 +76,14 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     }
   }
 
+  // 登陆检测
+  Future<void> checkLogin() async {
+    var user = await SharedPrefer.getUser();
+    if (user == null) {
+      Navigator.pushNamed(context, '/login');
+    }
+  }
+
   Future<void> socket() async {
     sockets = Socket();
     await sockets.newChannel();
@@ -98,7 +113,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
           padding: const EdgeInsets.only(top: 60, left: 100, right: 100),
           indicatorWeight: 5,
           //指示器高度
-          indicator:  UnderlineTabIndicator(
+          indicator: UnderlineTabIndicator(
               borderSide: const BorderSide(width: 2, color: Colors.white),
               insets: EdgeInsets.only(left: 60.w, right: 60.w)),
           labelColor: Colors.white,
@@ -168,10 +183,13 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
       ),
       body: TabBarView(
         controller: _tabController,
-        children: <Widget>[
-          Chats(),
-          Call(),
-        ],
+        children: tabBarViewChildren
+            .map((Widget tab) => Container(
+                  key: PageStorageKey<String>(
+                      tabBarViewChildren.indexOf(tab).toString()),
+                  child: tab,
+                ))
+            .toList(),
       ),
     );
   }

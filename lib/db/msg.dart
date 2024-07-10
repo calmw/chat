@@ -65,8 +65,6 @@ insertOrUpdateMsg(Msg msg) async {
     join(await getDatabasesPath(), 'msg.db'),
   );
 
-  ///
-  /// 查询
   // 构建查询语句
   String query = 'SELECT * FROM msg WHERE mid = ${msg.mid}';
   // 查询数据

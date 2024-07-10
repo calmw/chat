@@ -4,9 +4,12 @@ import 'package:chat/db/msg.dart';
 import 'package:chat/db/new_msg.dart';
 import 'package:chat/storage/shared_preference.dart';
 import 'package:chat/utils/env.dart';
+import 'package:chat/utils/event_bus.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../db/chat_list.dart';
+import '../../pages/chats.dart';
 
 Socket sockets = Socket().newChannel();
 
@@ -31,6 +34,7 @@ class Socket {
         // 单聊
         if (msg['data_type'] == 1) {
           await NewMsg().doNewMsg();
+          // EventBusManager.eventBus.fire(ChatsState().getChatList());
           var list =await getChatList();
           print(list);
         }
