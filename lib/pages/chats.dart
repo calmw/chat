@@ -2,6 +2,7 @@ import 'package:chat/db/chat_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../utils/env.dart';
+import '../utils/event_bus.dart';
 
 class Chats extends StatefulWidget {
   const Chats({super.key});
@@ -22,7 +23,14 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
-    _getChatList();
+    setChatList();
+    // 订阅事件
+    EventBusManager.eventBus.on<NewMsgEvent>().listen((event) {
+      if(event.eType==1){ // 新消息事件
+        setChatList();
+      }
+      // print('Received event: ${event.message}');
+    });
   }
 
   @override
@@ -32,7 +40,7 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
     super.dispose();
   }
 
-  _getChatList() async {
+  setChatList() async {
     _chatList = await getChatList();
   }
 

@@ -39,6 +39,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    super.initState();
     // 登陆检测
     checkLogin();
 
@@ -51,7 +52,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
         _handleTabChange();
       }
     });
-    super.initState();
     createMsgTable();
     createChatListTable();
     getUserInfo();

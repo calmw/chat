@@ -26,6 +26,7 @@ class LoginState extends State<Login> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),

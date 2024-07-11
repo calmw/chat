@@ -98,6 +98,8 @@ class RegisterState extends State<Register> {
     var headers = {
       'Authorization': token.toString(),
     };
+    print(1);
+    print(Env().get("API_HOST") + "api/v1/upload_image_one",);
 
     var response = await dio.post(
       Env().get("API_HOST") + "api/v1/upload_image_one",
@@ -126,6 +128,7 @@ class RegisterState extends State<Register> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),

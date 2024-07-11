@@ -34,7 +34,7 @@ class Socket {
         // 单聊
         if (msg['data_type'] == 1) {
           await NewMsg().doNewMsg();
-          // EventBusManager.eventBus.fire(ChatsState().getChatList());
+          EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
           var list =await getChatList();
           print(list);
         }

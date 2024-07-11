@@ -19,14 +19,15 @@ class HttpUtils {
     var headers = {
       'Authorization': token.toString(),
     };
+    print(headers);
     try {
       var response = await dio.get(path,
           queryParameters: queryParameters, options: Options(headers: headers));
       return jsonDecode(response.toString());
     } on DioException catch (e) {
       // 处理错误
-      print(e.message);
-      var err = Map();
+      print("http get error: ${e.message}");
+      var err = {};
       err["code"] = -1;
       err["message"] = "服务器繁忙";
       return jsonDecode(err.toString());
@@ -47,10 +48,8 @@ class HttpUtils {
       ;
     } on DioException catch (e) {
       // 处理错误
-      print(5);
-      print(e.message);
-      print(6);
-      var err = Map();
+      print("http post error: ${e.message}");
+      var err = {};
       err["code"] = -1;
       err["message"] = "服务器繁忙";
       return jsonDecode(err.toString());

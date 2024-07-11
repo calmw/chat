@@ -25,3 +25,11 @@ class EventBusManager {
     eventBus.destroy();
   }
 }
+
+// 定义事件类
+class NewMsgEvent {
+  String message;
+  int eType;
+
+  NewMsgEvent(this.message, this.eType);
+}
