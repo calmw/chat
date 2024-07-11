@@ -7,6 +7,7 @@ import 'package:chat/utils/email_check.dart';
 import 'package:chat/utils/env.dart';
 import 'package:chat/utils/http.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -90,6 +91,13 @@ class RegisterState extends State<Register> {
   // 上传图片
   void uploadImage(File image) async {
     var dio = Dio();
+    // 设置代理，以便能够发送HTTP请求
+    (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
+        (client) {
+      // 对于非HTTPS请求，通常不需要SSL校验
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+    };
     FormData formData = FormData.fromMap({
       "avatar": await MultipartFile.fromFile(image.path, filename: "image.jpg"),
     });
@@ -99,14 +107,16 @@ class RegisterState extends State<Register> {
       'Authorization': token.toString(),
     };
     print(1);
-    print(Env().get("API_HOST") + "api/v1/upload_image_one",);
-
-    var response = await dio.post(
-      Env().get("API_HOST") + "api/v1/upload_image_one",
+    print(Env().get("API_HOST") + "hello",);
+var r = await HttpUtils.get(Env().get("API_HOST") + "hello");
+    print(r);
+    var response = await dio.get(
+      Env().get("API_HOST") + "hello",
       data: formData,
       options: Options(headers: headers),
     );
     var res = jsonDecode(response.toString());
+    print(res);
     CheckLogin().check(res["code"], context);
     if (res["code"] == 0) {
       _avatar = res["data"]["uri"];
