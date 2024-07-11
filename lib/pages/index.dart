@@ -32,9 +32,9 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     Call(),
   ];
   late String _username = "";
-  late String _email =
+  late String _email = "";
+  late String _avatar =
       Env().get("STATIC_HOST") + 'images/avatar/default_user_logo.png';
-  late String _avatar = "";
   late String _uid = "";
 
   @override
@@ -148,10 +148,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
               decoration: const BoxDecoration(
                 //头部颜色或者图片
                 color: Color.fromRGBO(55, 120, 167, 1),
-                // image: DecorationImage(
-                //     image: NetworkImage('http://5b0988e595225.cdn.sohucs.com/images/20171108/e8d0b0ab35b14b33a499d74cbc52b43c.jpeg'),
-                //     fit: BoxFit.cover
-                // ),
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(_avatar),

@@ -27,6 +27,7 @@ dependencies:
   path_provider: ^2.1.3
   flutter_screenutil: ^5.9.3
   event_bus: ^2.0.0
+  fluttertoast: ^8.2.6
 
 dev_dependencies:
   flutter_test:
