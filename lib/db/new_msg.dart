@@ -5,7 +5,7 @@ import 'chat_list.dart';
 
 class NewMsg {
   // 收到新消息推送，拉取最新消息入库，更新chat list
-  doNewMsg() async {
+  saveNoReadMsg() async {
     /// 获取未读消息
     // 获取current_mid
     var currentMid = await SharedPrefer.getCurrentMid();
@@ -23,6 +23,7 @@ class NewMsg {
       if (res['data']["chats"][i]["group_type"] > 1) {
         cid = res['data']["chats"][i]["gid"];
       }
+      // , isMySend INTEGER, sendStatus INTEGER, readStatus INTEGER
       // 未读消息入库
       await insertOrUpdateMsg(Msg(
           res['data']["chats"][i]["id"],
@@ -32,6 +33,9 @@ class NewMsg {
           res['data']["chats"][i]["content"],
           res['data']["chats"][i]["msgType"],
           res['data']["chats"][i]["groutType"],
+          res['data']["chats"][i]["isMySend"],
+          res['data']["chats"][i]["sendStatus"],
+          res['data']["chats"][i]["readStatus"],
           res['data']["chats"][i]["createTime"]));
       // 更新chatList
       await insertOrUpdateChatList(
@@ -42,6 +46,9 @@ class NewMsg {
           res['data']["chats"][i]["sender_username"],
           res['data']["chats"][i]["sender_avatar"],
           res['data']["chats"][i]["group_type"],
+          res['data']["chats"][i]["isMySend"],
+          res['data']["chats"][i]["sendStatus"],
+          res['data']["chats"][i]["readStatus"],
           res['data']["not_read_no"],
           res['data']["chats"][i]["content"],
           res['data']["chats"][i]["msg_type"],

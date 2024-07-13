@@ -1,15 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:chat/db/msg.dart';
 import 'package:chat/db/new_msg.dart';
 import 'package:chat/storage/shared_preference.dart';
 import 'package:chat/utils/env.dart';
-import 'package:chat/utils/event_bus.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-
 import '../../db/chat_list.dart';
-import '../../pages/chats.dart';
 
 Socket sockets = Socket().newChannel();
 
@@ -32,10 +27,10 @@ class Socket {
         var msg = jsonDecode(message);
         print(msg['content']);
         // 单聊
-        if (msg['data_type'] == 1) {
-          await NewMsg().doNewMsg();
-          EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
-          var list =await getChatList();
+        if (msg['msg_transfer'] == 1 && msg['msg_type'] == 1) {
+          await NewMsg().saveNoReadMsg();
+          // EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
+          var list = await getChatList();
           print(list);
         }
       }

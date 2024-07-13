@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../db/chat_list.dart';
 import '../db/msg.dart';
+import '../utils/event_bus.dart';
 import '../utils/http.dart';
 import 'call.dart';
 import 'chats.dart';
@@ -56,6 +57,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     createChatListTable();
     getUserInfo();
     socket();
+    freshChats();
   }
 
   @override
@@ -65,6 +67,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
   }
 
   Future<void> getUserInfo() async {
+    print(22);
     var res = await HttpUtils.get("api/v1/user_info");
     if (res["code"] == 0) {
       setState(() {
@@ -76,8 +79,14 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     }
   }
 
+  freshChats(){
+    print(568897);
+    EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
+  }
+
   // 登陆检测
   Future<void> checkLogin() async {
+    print(11);
     var user = await SharedPrefer.getUser();
     if (user == null) {
       Navigator.pushNamed(context, '/login');
@@ -85,10 +94,12 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
   }
 
   Future<void> socket() async {
+    print(33);
     sockets = Socket();
     await sockets.newChannel();
     sockets.heartBeat();
     sockets.listen();
+    print(44);
   }
 
   void _handleTabChange() {

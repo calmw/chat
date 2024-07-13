@@ -42,6 +42,7 @@ class RegisterState extends State<Register> {
     // 发送验证码
     var res = await HttpUtils.post("api/v1/send_register_email_code",
         data: {"email": _email});
+    print(122312);
     print(res);
     if (res["code"] != 0) {
       ToastS.showShort(res["message"]);
@@ -322,6 +323,7 @@ class RegisterState extends State<Register> {
       "key": _verifyKey,
       "password": _password,
     });
+    print(res);
     if (res["code"] == 0) {
       var user = User();
       user.uid = res["data"]["uid"];
