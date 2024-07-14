@@ -121,8 +121,6 @@ insertOrUpdateChatList(ChatList chatList) async {
   final db = await openDatabase(
     join(await getDatabasesPath(), 'chat_list.db'),
   );
-  print(chatList);
-  print(2212);
 
   /// 查询
   // 构建查询语句

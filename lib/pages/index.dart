@@ -56,7 +56,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     createMsgTable();
     createChatListTable();
     getUserInfo();
-    socket();
     freshChats();
   }
 
@@ -93,14 +92,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     }
   }
 
-  Future<void> socket() async {
-    print(33);
-    sockets = Socket();
-    await sockets.newChannel();
-    sockets.heartBeat();
-    sockets.listen();
-    print(44);
-  }
 
   void _handleTabChange() {
     if (_tabController?.index == 0) {

@@ -41,9 +41,6 @@ class HttpUtils {
     var headers = {
       'Authorization': token.toString(),
     };
-    print(777);
-    print(Env().get("API_HOST"));
-    print(path);
     try {
       var response =
           await dio.post(path, data: data, options: Options(headers: headers));

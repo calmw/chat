@@ -21,20 +21,23 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
-    setChatList();
     // 订阅事件
     EventBusManager.eventBus.on<NewMsgEvent>().listen((event) {
       if(event.eType==1){ // 新消息事件
-        setChatList();
+        setState(() {
+          setChatList();
+        });
       }
       // print('Received event: ${event.message}');
     });
+    setChatList();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     _controller.dispose();
+    // 取消监听
     super.dispose();
   }
 

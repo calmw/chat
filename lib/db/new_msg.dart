@@ -17,13 +17,15 @@ class NewMsg {
     }
 
     /// 处理未读消息
-    // await SharedPrefer.setCurrentMid(res['data']["current_mid"]);
+    // await SharedPrefer.setCurrentMid(res['data']["current_mid"]); // 上线需打开
     for (var i = 0; i < res['data']["chats"].length; i++) {
-      var cid = res['data']["chats"][i]["from"];
-      if (res['data']["chats"][i]["group_type"] > 1) {
-        cid = res['data']["chats"][i]["gid"];
-      }
-      // , isMySend INTEGER, sendStatus INTEGER, readStatus INTEGER
+      // var cid = res['data']["chats"][i]["from"];
+      // if (res['data']["chats"][i]["group_type"] > 1) {
+      //   cid = res['data']["chats"][i]["gid"];
+      // }
+      var isMySend = 0;
+      var sendStatus = 0;
+      var readStatus = 0;
       // 未读消息入库
       await insertOrUpdateMsg(Msg(
           res['data']["chats"][i]["id"],
@@ -33,27 +35,26 @@ class NewMsg {
           res['data']["chats"][i]["content"],
           res['data']["chats"][i]["msgType"],
           res['data']["chats"][i]["groutType"],
-          res['data']["chats"][i]["isMySend"],
-          res['data']["chats"][i]["sendStatus"],
-          res['data']["chats"][i]["readStatus"],
+          isMySend,
+          sendStatus,
+          readStatus,
           res['data']["chats"][i]["createTime"]));
       // 更新chatList
       await insertOrUpdateChatList(
         ChatList(
-          res['data']["chats"][i]["id"],
-          res['data']["chats"][i]["receiver"],
-          res['data']["chats"][i]["sender"],
-          res['data']["chats"][i]["sender_username"],
-          res['data']["chats"][i]["sender_avatar"],
-          res['data']["chats"][i]["group_type"],
-          res['data']["chats"][i]["isMySend"],
-          res['data']["chats"][i]["sendStatus"],
-          res['data']["chats"][i]["readStatus"],
-          res['data']["not_read_no"],
-          res['data']["chats"][i]["content"],
-          res['data']["chats"][i]["msg_type"],
-          res['data']["chats"][i]["create_time"]
-        ),
+            res['data']["chats"][i]["id"],
+            res['data']["chats"][i]["receiver"],
+            res['data']["chats"][i]["sender"],
+            res['data']["chats"][i]["sender_username"],
+            res['data']["chats"][i]["sender_avatar"],
+            res['data']["chats"][i]["group_type"],
+            isMySend,
+            sendStatus,
+            readStatus,
+            res['data']["not_read_no"],
+            res['data']["chats"][i]["content"],
+            res['data']["chats"][i]["msg_type"],
+            res['data']["chats"][i]["create_time"]),
       );
     }
   }
