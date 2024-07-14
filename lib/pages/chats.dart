@@ -1,4 +1,5 @@
 import 'package:chat/db/chat_list.dart';
+import 'package:chat/storage/shared_preference.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../utils/env.dart';
@@ -17,32 +18,42 @@ class Chats extends StatefulWidget {
 class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
   final ScrollController _controller = ScrollController();
   late List<ChatList> _chatList = [];
+  late String _uid = "";
 
   @override
   void initState() {
     super.initState();
+    setChatList();
     // 订阅事件
     EventBusManager.eventBus.on<NewMsgEvent>().listen((event) {
-      if(event.eType==1){ // 新消息事件
+      print(99988778);
+      if (event.eType == 1) {
+
+        // 新消息事件
         setState(() {
           setChatList();
         });
       }
       // print('Received event: ${event.message}');
     });
-    setChatList();
+    getMyUid();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _controller.dispose();
     // 取消监听
     super.dispose();
   }
 
+  getMyUid() async {
+    var user = await SharedPrefer.getUser();
+    _uid = user!.uid;
+  }
+
   setChatList() async {
     _chatList = await getChatList();
+    print(99988778);
   }
 
   @override
@@ -65,98 +76,103 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
 
   /// 获取子项目
   Widget createItem(int index) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 80.w, // 左侧宽度
-          height: 100.h,
-          child: Container(
-            width: 80.w,
-            height: 80.h,
-            margin: const EdgeInsets.fromLTRB(10,10,10,10),
-            child: CircleAvatar(
-              radius: 60.w,
-              backgroundImage: NetworkImage(
-                  Env().get("STATIC_HOST") + _chatList[index].senderAvatar),
+    return RawMaterialButton(
+        onPressed: () => {
+              Navigator.pushNamed(context, '/chat_details', arguments: {
+                "uid": _uid,
+                "senderUsername": _chatList[index].senderUsername,
+                "senderAvatar": _chatList[index].senderAvatar,
+                "receiver": _chatList[index].receiver,
+                "groupType": _chatList[index].groupType
+              })
+            },
+        child: Row(
+          children: [
+            SizedBox(
+              width: 80.w, // 左侧宽度
+              height: 100.w,
+              child: Container(
+                width: 80.w,
+                height: 80.w,
+                margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                child: CircleAvatar(
+                  radius: 60.w,
+                  backgroundImage: NetworkImage(
+                      Env().get("STATIC_HOST") + _chatList[index].senderAvatar),
+                ),
+              ),
             ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-              height: 70.h,
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     color: Colors.blue,
-              //     width: 1, // 边框宽度
-              //   ),
-              // ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Expanded(
+              child: SizedBox(
+                  height: 70.h,
+                  child: Column(
                     children: [
-                      Text(
-                        "${_chatList[index].senderUsername}",
-                        style: TextStyle(fontSize: 18.sp, height: 1.h,color: Colors.black,fontWeight: FontWeight.bold),
-                      ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Icon(
-                            Icons.done_rounded,
-                            // Icons.done_all_rounded,
-                            color: Color.fromRGBO(100, 161, 193, 1),
-                            size: 20,
-                          ),
                           Text(
-                            messageTime(
-                                _chatList[index].latestMsgTime! ~/ 1000),
+                            "${_chatList[index].senderUsername}",
                             style: TextStyle(
-                                fontSize: 12.sp,
+                                fontSize: 18.sp,
+                                height: 1.h,
                                 color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                height: 1.h),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              const Icon(
+                                Icons.done_rounded,
+                                // Icons.done_all_rounded,
+                                color: Color.fromRGBO(100, 161, 193, 1),
+                                size: 20,
+                              ),
+                              Text(
+                                messageTime(
+                                    _chatList[index].latestMsgTime! ~/ 1000),
+                                style: TextStyle(
+                                    fontSize: 12.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.h),
+                              ),
+                            ],
                           ),
                         ],
                       ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: SizedBox(
+                            height: 58,
+                            child: RichText(
+                                maxLines: 2,
+                                overflow: TextOverflow.clip,
+                                //必传文本
+                                text: TextSpan(
+                                  text: _chatList[index].latestMsg,
+                                  // text: userPrivateProtocol,
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14.sp,
+                                      height: 1.25.h),
+                                )),
+                          ))
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const Divider(
+                        height: 1, // 划线的高度
+                        color: Colors.black12, // 划线的颜色
+                        // 其他属性...
+                      ),
                     ],
-                  ),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 58,
-                          child: RichText(
-                              maxLines: 2,
-                              overflow: TextOverflow.clip,
-                              //必传文本
-                              text: TextSpan(
-                                text: _chatList[index].latestMsg,
-                                // text: userPrivateProtocol,
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14.sp,
-                                    height: 1.25.h),
-                              )),
-                        )
-                      )
-                    ],
-                  ),
-
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  const Divider(
-                    height: 1, // 划线的高度
-                    color: Colors.black12, // 划线的颜色
-                    // 其他属性...
-                  ),
-                ],
-              )),
-        ),
-      ],
-    );
+                  )),
+            ),
+          ],
+        ));
   }
 
   String messageTime(int timeStamp) {

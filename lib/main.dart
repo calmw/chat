@@ -3,6 +3,7 @@ import 'package:chat/pages/chat_details.dart';
 import 'package:chat/pages/index.dart';
 import 'package:chat/pages/login.dart';
 import 'package:chat/pages/register.dart';
+import 'package:chat/routes/router.dart';
 import 'package:chat/storage/shared_preference.dart';
 import 'package:chat/utils/env.dart';
 import 'package:chat/utils/socket/socket.dart';
@@ -53,12 +54,13 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.blue,
               textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
             ),
-            routes: {
-              "/": (context) => const Index(),
-              "/login": (context) => const Login(),
-              "/register": (context) => const Register(),
-              "/chat_details": (context) => const ChatDetails(),
-            },
+            // routes: {
+            //   "/": (context) => const Index(),
+            //   "/login": (context) => const Login(),
+            //   "/register": (context) => const Register(),
+            //   "/chat_details": (context,{arguments}) =>  ChatDetails(arguments:arguments)
+            // },
+            onGenerateRoute: onGenerateRoute,
           );
         },
       ),

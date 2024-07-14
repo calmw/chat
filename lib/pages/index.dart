@@ -66,7 +66,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
   }
 
   Future<void> getUserInfo() async {
-    print(22);
     var res = await HttpUtils.get("api/v1/user_info");
     if (res["code"] == 0) {
       setState(() {
@@ -79,13 +78,12 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
   }
 
   freshChats(){
-    print(568897);
     EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
+    print(9998877);
   }
 
   // 登陆检测
   Future<void> checkLogin() async {
-    print(11);
     var user = await SharedPrefer.getUser();
     if (user == null) {
       Navigator.pushNamed(context, '/login');
@@ -105,6 +103,9 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.white, // 设置返回箭头颜色为白色
+        ),
         backgroundColor: const Color.fromRGBO(55, 120, 167, 1),
         flexibleSpace: TabBar(
           controller: _tabController,
@@ -130,6 +131,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
             icon: const Icon(
               Icons.search,
               color: Colors.white,
+              size: 24,
             ),
             onPressed: () => {},
           ),
@@ -137,8 +139,8 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
         automaticallyImplyLeading: true,
       ),
       drawer: Drawer(
-        surfaceTintColor: Colors.amber,
-        shadowColor: Colors.amber,
+        surfaceTintColor: Colors.white,
+        shadowColor: Colors.white,
         child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
@@ -156,20 +158,27 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.home, size: 36.0),
-              title: const Text('Home'),
+              leading: const Icon(Icons.settings, size: 36.0),
+              title: const Text('设置'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.person, size: 36.0),
+              title: const Text('个人信息'),
               onTap: () {
                 Navigator.pushNamed(context, '/');
               },
             ),
             ListTile(
-              leading: const Icon(Icons.settings, size: 36.0),
-              title: const Text('Settings'),
-              onTap: () {},
+              leading: const Icon(Icons.wallet, size: 36.0),
+              title: const Text('链上钱包'),
+              onTap: () {
+                Navigator.pushNamed(context, '/');
+              },
             ),
             ListTile(
-              leading: const Icon(Icons.logout_outlined, size: 35.0),
-              title: const Text('Logout'),
+              leading: const Icon(Icons.logout_rounded, size: 35.0),
+              title: const Text('退出登录'),
               onTap: () async {
                 await SharedPrefer.logOut();
                 Navigator.pushNamed(context, '/login');

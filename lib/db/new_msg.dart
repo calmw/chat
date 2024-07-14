@@ -19,26 +19,35 @@ class NewMsg {
     /// 处理未读消息
     // await SharedPrefer.setCurrentMid(res['data']["current_mid"]); // 上线需打开
     for (var i = 0; i < res['data']["chats"].length; i++) {
-      // var cid = res['data']["chats"][i]["from"];
-      // if (res['data']["chats"][i]["group_type"] > 1) {
-      //   cid = res['data']["chats"][i]["gid"];
-      // }
       var isMySend = 0;
       var sendStatus = 0;
       var readStatus = 0;
       // 未读消息入库
+      print(Msg(
+          res['data']["chats"][i]["id"],
+          res['data']["chats"][i]["mid"],
+          res['data']["chats"][i]["sender"],
+          res['data']["chats"][i]["receiver"],
+          res['data']["chats"][i]["content"],
+          res['data']["chats"][i]["msg_type"],
+          res['data']["chats"][i]["group_type"],
+          isMySend,
+          sendStatus,
+          readStatus,
+          res['data']["chats"][i]["create_time"]));
+      print(666);
       await insertOrUpdateMsg(Msg(
           res['data']["chats"][i]["id"],
           res['data']["chats"][i]["mid"],
           res['data']["chats"][i]["sender"],
           res['data']["chats"][i]["receiver"],
           res['data']["chats"][i]["content"],
-          res['data']["chats"][i]["msgType"],
-          res['data']["chats"][i]["groutType"],
+          res['data']["chats"][i]["msg_type"],
+          res['data']["chats"][i]["group_type"],
           isMySend,
           sendStatus,
           readStatus,
-          res['data']["chats"][i]["createTime"]));
+          res['data']["chats"][i]["create_time"]));
       // 更新chatList
       await insertOrUpdateChatList(
         ChatList(
