@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../db/chat_list.dart';
 import '../db/msg.dart';
+import '../utils/event_bus.dart';
 import '../utils/http.dart';
 import 'call.dart';
 import 'chats.dart';
@@ -32,9 +33,9 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     Call(),
   ];
   late String _username = "";
-  late String _email =
+  late String _email = "";
+  late String _avatar =
       Env().get("STATIC_HOST") + 'images/avatar/default_user_logo.png';
-  late String _avatar = "";
   late String _uid = "";
 
   @override
@@ -53,7 +54,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
       }
     });
     getUserInfo();
-    socket();
+    freshChats();
   }
 
   @override
@@ -74,6 +75,11 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     }
   }
 
+  freshChats(){
+    EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
+    print(9998877);
+  }
+
   // 登陆检测
   Future<void> checkLogin() async {
     var user = await SharedPrefer.getUser();
@@ -82,12 +88,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     }
   }
 
-  Future<void> socket() async {
-    sockets = Socket();
-    await sockets.newChannel();
-    sockets.heartBeat();
-    sockets.listen();
-  }
 
   void _handleTabChange() {
     if (_tabController?.index == 0) {
@@ -101,6 +101,9 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.white, // 设置返回箭头颜色为白色
+        ),
         backgroundColor: const Color.fromRGBO(55, 120, 167, 1),
         flexibleSpace: TabBar(
           controller: _tabController,
@@ -126,6 +129,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
             icon: const Icon(
               Icons.search,
               color: Colors.white,
+              size: 24,
             ),
             onPressed: () => {},
           ),
@@ -133,8 +137,8 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
         automaticallyImplyLeading: true,
       ),
       drawer: Drawer(
-        surfaceTintColor: Colors.amber,
-        shadowColor: Colors.amber,
+        surfaceTintColor: Colors.white,
+        shadowColor: Colors.white,
         child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
@@ -146,30 +150,33 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
               decoration: const BoxDecoration(
                 //头部颜色或者图片
                 color: Color.fromRGBO(55, 120, 167, 1),
-                // image: DecorationImage(
-                //     image: NetworkImage('http://5b0988e595225.cdn.sohucs.com/images/20171108/e8d0b0ab35b14b33a499d74cbc52b43c.jpeg'),
-                //     fit: BoxFit.cover
-                // ),
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(_avatar),
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.home, size: 36.0),
-              title: const Text('Home'),
+              leading: const Icon(Icons.settings, size: 36.0),
+              title: const Text('设置'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.person, size: 36.0),
+              title: const Text('个人信息'),
               onTap: () {
                 Navigator.pushNamed(context, '/');
               },
             ),
             ListTile(
-              leading: const Icon(Icons.settings, size: 36.0),
-              title: const Text('Settings'),
-              onTap: () {},
+              leading: const Icon(Icons.wallet, size: 36.0),
+              title: const Text('链上钱包'),
+              onTap: () {
+                Navigator.pushNamed(context, '/');
+              },
             ),
             ListTile(
-              leading: const Icon(Icons.logout_outlined, size: 35.0),
-              title: const Text('Logout'),
+              leading: const Icon(Icons.logout_rounded, size: 35.0),
+              title: const Text('退出登录'),
               onTap: () async {
                 await SharedPrefer.logOut();
                 Navigator.pushNamed(context, '/login');

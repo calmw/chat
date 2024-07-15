@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:chat/utils/check_login.dart';
-import 'package:chat/utils/dialog.dart';
 import 'package:chat/utils/email_check.dart';
 import 'package:chat/utils/env.dart';
 import 'package:chat/utils/http.dart';
+import 'package:chat/utils/toast.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/material.dart';
@@ -36,14 +36,16 @@ class RegisterState extends State<Register> {
 
   Future<bool> sendCode() async {
     if (!Email.checkFormat(_email)) {
-      ErrDialog().showBottomMsg(context, "email 不能为空或email格式错误");
+      ToastS.showShort("email 不能为空或email格式错误");
       return false;
     }
     // 发送验证码
     var res = await HttpUtils.post("api/v1/send_register_email_code",
         data: {"email": _email});
+    print(122312);
+    print(res);
     if (res["code"] != 0) {
-      ErrDialog().showBottomMsg(context, res["message"]);
+      ToastS.showShort(res["message"]);
       return false;
     } else {
       _verifyKey = res["data"]["key"];
@@ -100,23 +102,17 @@ class RegisterState extends State<Register> {
     FormData formData = FormData.fromMap({
       "avatar": await MultipartFile.fromFile(image.path, filename: "image.jpg"),
     });
-
-    Object? token = await SharedPrefer.getJwtToken();
-    var headers = {
-      'Authorization': token.toString(),
-    };
-var r = await HttpUtils.get(Env().get("API_HOST") + "hello");
-    var response = await dio.get(
-      Env().get("API_HOST") + "hello",
+    var response = await dio.post(
+      Env().get("API_HOST") + "api/v1/upload_image_one",
       data: formData,
-      options: Options(headers: headers),
     );
     var res = jsonDecode(response.toString());
+    print(res);
     CheckLogin().check(res["code"], context);
     if (res["code"] == 0) {
       _avatar = res["data"]["uri"];
     } else {
-      ErrDialog().showBottomMsg(context, res["message"]);
+      ToastS.showShort(res["message"]);
     }
   }
 
@@ -327,14 +323,15 @@ var r = await HttpUtils.get(Env().get("API_HOST") + "hello");
       "key": _verifyKey,
       "password": _password,
     });
+    print(res);
     if (res["code"] == 0) {
       var user = User();
       user.uid = res["data"]["uid"];
       user.jwtToken = res["data"]["access_token"];
-      SharedPrefer.saveUser(user);
-      Navigator.pop(context);
+      await SharedPrefer.saveUser(user);
+      Navigator.pushNamed(context, '/');
     } else {
-      ErrDialog().showBottomMsg(context, res["message"]);
+      ToastS.showShort(res["message"]);
     }
   }
 }

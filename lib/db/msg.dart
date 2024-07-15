@@ -9,6 +9,9 @@ class Msg {
   final String? content;
   final int? msgType;
   final int? groupType;
+  final int? isMySend;
+  final int? sendStatus;
+  final int? readStatus;
   final int? createTime;
 
   const Msg(
@@ -19,6 +22,9 @@ class Msg {
     this.content,
     this.msgType,
     this.groupType,
+    this.isMySend,
+    this.sendStatus,
+    this.readStatus,
     this.createTime,
   );
 
@@ -32,6 +38,9 @@ class Msg {
       'content': content,
       'msgType': msgType,
       'groupType': groupType,
+      'isMySend': isMySend,
+      'sendStatus': sendStatus,
+      'readStatus': readStatus,
       'createTime': createTime,
     };
   }
@@ -39,7 +48,7 @@ class Msg {
   // 为了打印数据
   @override
   String toString() {
-    return 'Msg{id: $id, mid: $mid, sender: $sender, receiver: $receiver, content: $content, msgType: $msgType, groupType: $groupType, createTime: $createTime}';
+    return 'Msg{id: $id, mid: $mid, sender: $sender, receiver: $receiver, content: $content, msgType: $msgType, groupType: $groupType, isMySend: $isMySend, sendStatus: $sendStatus, readStatus: $readStatus, createTime: $createTime}';
   }
 }
 
@@ -51,7 +60,8 @@ createMsgTable() async {
     join(await getDatabasesPath(), 'msg.db'),
     onCreate: (db, version) {
       var sql =
-          "CREATE TABLE IF NOT EXISTS msg (id INTEGER PRIMARY KEY, mid INTEGER, sender TEXT , receiver TEXT , content TEXT , msgType INTEGER , groupType INTEGER , createTime INTEGER)";
+          "CREATE TABLE IF NOT EXISTS msg (id INTEGER PRIMARY KEY, mid INTEGER, sender TEXT , receiver TEXT , content TEXT , msgType INTEGER , groupType INTEGER , isMySend INTEGER, sendStatus INTEGER, readStatus INTEGER, createTime INTEGER)";
+      print(sql);
       return db.execute(sql);
     },
     version: 1,
@@ -101,9 +111,13 @@ Future<List<Msg>> getMsg() async {
           'content': content as String,
           'msgType': msgType as int,
           'groupType': groupType as int,
+          'isMySend': isMySend as int,
+          'sendStatus': sendStatus as int,
+          'readStatus': readStatus as int,
           'createTime': createTime as int,
         } in MsgMaps)
-      Msg(id, mid, sender, receiver, content, msgType, groupType, createTime),
+      Msg(id, mid, sender, receiver, content, msgType, groupType, isMySend,
+          sendStatus, readStatus, createTime),
   ];
 }
 

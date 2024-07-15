@@ -4,8 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../storage/shared_preference.dart';
-import '../utils/dialog.dart';
 import '../utils/env.dart';
+import '../utils/toast.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -140,7 +140,7 @@ class LoginState extends State<Login> {
       await SharedPrefer.saveUser(user);
       Navigator.pushNamed(context, '/');
     } else {
-      ErrDialog().showBottomMsg(context, res["message"]);
+      ToastS.showShort(res["message"]);
     }
   }
 }
@@ -149,7 +149,7 @@ class LoginState extends State<Login> {
 // cisco2: q26347288c17fc21 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJxMjYzNDcyODhjMTdmYzIxIiwiZXhwIjoxNzIzMTg2ODAwLCJpc3MiOiJjaGF0In0.TxhrkXwBMs2wkdIlDxOSA4-7DTmqQcvnZgeOL7p89Y8
 // cisco3: y263472928f39fce eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJ5MjYzNDcyOTI4ZjM5ZmNlIiwiZXhwIjoxNzIzMTg2ODIyLCJpc3MiOiJjaGF0In0.s87NgzxeznaBKWCvZUVwGrverUWvpO4kDaWkz0ykOyk
 
-// cisco1: q26349accef3391c
-// cisco2: t26349aa2a6ad735 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJ0MjYzNDlhYTJhNmFkNzM1IiwiZXhwIjoxNzIzMjE0MjEyLCJpc3MiOiJjaGF0In0.cplZviLmGCGfrpETNmDbYp__SQFVvhe3yukbIs2dKYY
-// cisco3: f26349aad0b26b66 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJmMjYzNDlhYWQwYjI2YjY2IiwiZXhwIjoxNzIzMjE0MjQ0LCJpc3MiOiJjaGF0In0.j2WwCD9KRIheuq9yw-bzvZItCCMT5AqjCN_N9PhKQS0
+// cisco1: l26351c3160ade59
+// cisco2: q26351f9b7e2470a eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJ0MjYzNDlhYTJhNmFkNzM1IiwiZXhwIjoxNzIzMjE0MjEyLCJpc3MiOiJjaGF0In0.cplZviLmGCGfrpETNmDbYp__SQFVvhe3yukbIs2dKYY
+// cisco3: c26351fb9ff80281 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJmMjYzNDlhYWQwYjI2YjY2IiwiZXhwIjoxNzIzMjE0MjQ0LCJpc3MiOiJjaGF0In0.j2WwCD9KRIheuq9yw-bzvZItCCMT5AqjCN_N9PhKQS0
 

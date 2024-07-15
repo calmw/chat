@@ -7,7 +7,7 @@ class HttpUtils {
   static final BaseOptions baseOptions = BaseOptions(
     baseUrl: Env().get("API_HOST"),
     connectTimeout: const Duration(seconds: 2),
-    receiveTimeout: const Duration(seconds: 2),
+    receiveTimeout: const Duration(seconds: 20),
   );
 
   static final Dio dio = Dio(baseOptions);

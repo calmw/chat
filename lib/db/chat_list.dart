@@ -8,6 +8,9 @@ class ChatList {
   final String? senderUsername;
   final String? senderAvatar;
   final int? groupType;
+  final int? isMySend;
+  final int? sendStatus;
+  final int? readStatus;
   final int? notReadMsgNo;
   final String? latestMsg;
   final int? latestMsgType;
@@ -20,6 +23,9 @@ class ChatList {
       this.senderUsername,
       this.senderAvatar,
       this.groupType,
+      this.isMySend,
+      this.sendStatus,
+      this.readStatus,
       this.notReadMsgNo,
       this.latestMsg,
       this.latestMsgType,
@@ -34,6 +40,9 @@ class ChatList {
       'senderUsername': senderUsername,
       'senderAvatar': senderAvatar,
       'groupType': groupType,
+      'isMySend': isMySend,
+      'sendStatus': sendStatus,
+      'readStatus': readStatus,
       'notReadMsgNo': notReadMsgNo,
       'latestMsg': latestMsg,
       'latestMsgType': latestMsgType,
@@ -44,7 +53,7 @@ class ChatList {
   // 为了打印数据
   @override
   String toString() {
-    return 'ChatList{id: $id,receiver: $receiver,sender: $sender, senderUsername: $senderUsername, senderAvatar: $senderAvatar, groupType: $groupType, notReadMsgNo: $notReadMsgNo, latestMsg: $latestMsg, latestMsgType: $latestMsgType, latestMsgTime: $latestMsgTime}';
+    return 'ChatList{id: $id,receiver: $receiver,sender: $sender, senderUsername: $senderUsername, senderAvatar: $senderAvatar, groupType: $groupType, isMySend: $isMySend, sendStatus: $sendStatus, readStatus: $readStatus, notReadMsgNo: $notReadMsgNo, latestMsg: $latestMsg, latestMsgType: $latestMsgType, latestMsgTime: $latestMsgTime}';
   }
 }
 
@@ -52,11 +61,13 @@ class ChatList {
 
 //创建 ChatList 表
 createChatListTable() async {
+  print(join(await getDatabasesPath(), 'chat_list.db'));
   openDatabase(
     join(await getDatabasesPath(), 'chat_list.db'),
     onCreate: (db, version) {
       var sql =
-          "CREATE TABLE IF NOT EXISTS chat_list (id INTEGER PRIMARY KEY,receiver TEXT, sender TEXT, senderUsername TEXT, senderAvatar TEXT, groupType INTEGER, notReadMsgNo INTEGER, latestMsg TEXT,latestMsgType INTEGER, latestMsgTime INTEGER)";
+          "CREATE TABLE IF NOT EXISTS chat_list (id INTEGER PRIMARY KEY,receiver TEXT, sender TEXT, senderUsername TEXT, senderAvatar TEXT, groupType INTEGER, isMySend INTEGER, sendStatus INTEGER, readStatus INTEGER, notReadMsgNo INTEGER, latestMsg TEXT,latestMsgType INTEGER, latestMsgTime INTEGER)";
+      print(sql);
       return db.execute(sql);
     },
     version: 1,
@@ -92,13 +103,16 @@ Future<List<ChatList>> getChatList() async {
           'senderUsername': senderUsername as String,
           'senderAvatar': senderAvatar as String,
           'groupType': groupType as int,
+          'isMySend': isMySend as int,
+          'sendStatus': sendStatus as int,
+          'readStatus': readStatus as int,
           'notReadMsgNo': notReadMsgNo as int,
           'latestMsg': latestMsg as String,
           'latestMsgType': latestMsgType as int,
           'latestMsgTime': latestMsgTime as int,
         } in chatListMaps)
-      ChatList(id, receiver, sender, senderUsername, senderAvatar, groupType,
-          notReadMsgNo, latestMsg, latestMsgType, latestMsgTime),
+      ChatList(
+          id, receiver, sender, senderUsername, senderAvatar, groupType, isMySend, sendStatus, readStatus, notReadMsgNo, latestMsg, latestMsgType, latestMsgTime),
   ];
 }
 
