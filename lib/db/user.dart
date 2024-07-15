@@ -1,6 +1,7 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../storage/shared_preference.dart';
 import '../utils/http.dart';
 import 'chat_list.dart';
 
@@ -49,8 +50,6 @@ insertOrUpdateMsg(User user) async {
   final db = await openDatabase(
     join(await getDatabasesPath(), 'user.db'),
   );
-print(user);
-print(67867);
   // 构建查询语句
   String query = "SELECT * FROM user WHERE uid = '${user.uid}'";
   // 查询数据
@@ -88,7 +87,7 @@ Future<Map<String, Object?>> getUser(String uid) async {
   );
 
   // 关闭数据库
-  db.close();
+  // db.close();
 
   // 确保查询到了数据
   if (rows.isNotEmpty) {
@@ -148,6 +147,10 @@ deleteMsg() {
 
 // 更新用户信息到存储
 saveUserInfo() async {
+  var user = await SharedPrefer.getUser();
+  print(123456);
+  print(user);
+  getServerUserInfo(user!.uid);
   var chatList = await getChatList();
   for (ChatList l in chatList) {
     getServerUserInfo(l.sender!);

@@ -62,7 +62,7 @@ class LoginState extends State<Login> {
                         fontSize: 18.sp,
                       ),
                       hintText: "昵称/邮箱",
-                      hintStyle: TextStyle(fontSize: 16)),
+                      hintStyle: const TextStyle(fontSize: 16)),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return '请输入昵称或者邮箱';

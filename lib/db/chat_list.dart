@@ -58,7 +58,6 @@ class ChatList {
 }
 
 // 数据操作
-
 //创建 ChatList 表
 createChatListTable() async {
   openDatabase(
@@ -132,7 +131,6 @@ insertOrUpdateChatList(ChatList chatList) async {
     join(await getDatabasesPath(), 'chat_list.db'),
   );
 
-  /// 查询
   // 构建查询语句
   String query = "SELECT * FROM chat_list WHERE sender = '${chatList.sender}'";
   if (chatList.groupType! > 1) {

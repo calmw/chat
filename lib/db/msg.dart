@@ -54,7 +54,6 @@ class Msg {
 }
 
 // 数据操作
-
 //创建 Msg 表
 createMsgTable() async {
   openDatabase(

@@ -1,8 +1,8 @@
+import 'package:chat/models/msg_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../db/msg.dart';
 import '../db/user.dart';
+import '../utils/datatime.dart';
 import '../utils/env.dart';
 import '../utils/http.dart';
 
@@ -19,7 +19,11 @@ class ChatDetails extends StatefulWidget {
 
 class ChatDetailsState extends State<ChatDetails> {
   final ScrollController _controller = ScrollController();
-  late List<Msg> _msgList = [];
+  late List<MsgList> _msgList = [];
+  late String _sendText;
+
+  // late final User _user = User(widget.arguments['uid'], widget.arguments['username'],
+  //     widget.arguments['avatar']);
 
   @override
   void initState() {
@@ -35,19 +39,10 @@ class ChatDetailsState extends State<ChatDetails> {
   }
 
   setMsgList() async {
-    var list = await getMsg();
+    var list = await getMsgList();
     setState(() {
       _msgList = list;
     });
-  }
-
-  getUserInfo(String uid)  async {
-    var user=await getUser(uid);
-    if(user['uid']==""){
-      return const User( "","","");
-    }else{
-      return User(user['uid'] as String?, user['username'] as String?, user['avatar'] as String?);
-    }
   }
 
   @override
@@ -73,7 +68,7 @@ class ChatDetailsState extends State<ChatDetails> {
                 child: CircleAvatar(
                   radius: 50.w,
                   backgroundImage: NetworkImage(Env().get("STATIC_HOST") +
-                      "${getUserInfo(widget.arguments['uid'])['avatar']}"),
+                      "${widget.arguments['senderAvatar']}"),
                 ),
               ),
             ),
@@ -92,7 +87,7 @@ class ChatDetailsState extends State<ChatDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "${getUserInfo(widget.arguments['sender'])['username']}",
+                            "${widget.arguments['senderUsername']}",
                             style: TextStyle(
                                 fontSize: 18.sp,
                                 height: 1.h,
@@ -120,7 +115,9 @@ class ChatDetailsState extends State<ChatDetails> {
         ),
         centerTitle: true,
       ),
-      body: buildList(),
+      body: Stack(
+        children: [buildList(), chatBottom()],
+      ),
     );
   }
 
@@ -134,6 +131,102 @@ class ChatDetailsState extends State<ChatDetails> {
       controller: _controller,
       key: const PageStorageKey(1),
     );
+  }
+
+  weightReadStatus(MsgList ml) {
+    if (ml.isMySend! > 0) {
+      if (ml.readStatus! == 0) {
+        return const Icon(
+          Icons.done_all_rounded,
+          color: Color.fromRGBO(100, 161, 193, 1),
+          size: 20,
+        );
+      }
+      if (ml.sendStatus! > 0) {
+        return const Icon(
+          Icons.done_rounded,
+          color: Color.fromRGBO(100, 161, 193, 1),
+          size: 20,
+        );
+      }
+    }
+
+    return const Text("");
+  }
+
+  chatBottom() {
+    return Positioned(
+        bottom: 0.0,
+        left: 0.0,
+        right: 0.0,
+        child: Column(
+          children: [
+            Container(
+              height: 45.h,
+              decoration: const BoxDecoration(
+                color: Colors.white, // 背景颜色
+                border: Border(
+                  top: BorderSide(
+                    color: Colors.black,
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    child: const Icon(
+                      Icons.keyboard_voice_outlined,
+                      size: 40,
+                      color: Color.fromRGBO(129, 132, 140, 1),
+                    ),
+                  ),
+                  Expanded(
+                    child: SizedBox(
+                      height: 45.h,
+                      child: TextField(
+                        onChanged: (value) {
+                          _sendText = value;
+                          print(value);
+                        },
+                        autofocus: false,
+                        maxLines: 20,
+                        keyboardType: TextInputType.text,
+                        style:
+                            TextStyle(color: Colors.black54, fontSize: 18.sp),
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Message',
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(2),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.send,
+                        size: 40,
+                        color: Color.fromRGBO(81, 168, 235, 1),
+                      ),
+                      onPressed: () {
+                        HttpUtils.post('api/v1/send_msg', data: {
+                          "from": "${widget.arguments['uid']}",
+                          "to": "${widget.arguments['receiver']}",
+                          "client_msg_id": "string",
+                          "content": _sendText,
+                          "msg_type": 1,
+                          "group_type": 1
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ));
   }
 
   Widget createItem(int index) {
@@ -154,8 +247,8 @@ class ChatDetailsState extends State<ChatDetails> {
                 width: 40.w,
                 child: CircleAvatar(
                   radius: 40.w,
-                  backgroundImage:
-                      NetworkImage(Env().get("STATIC_HOST") + "${getUserInfo(_msgList[index].sender!)['avatar']}"),
+                  backgroundImage: NetworkImage(Env().get("STATIC_HOST") +
+                      "${_msgList[index].senderAvatar}"),
                 ),
               ),
             ),
@@ -176,27 +269,21 @@ class ChatDetailsState extends State<ChatDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "${_msgList[index].sender}",
+                        "${_msgList[index].senderUsername}",
                         style: TextStyle(
                             fontSize: 18.sp,
                             height: 1.h,
                             color: Colors.black,
                             fontWeight: FontWeight.bold),
                       ),
+                      weightReadStatus(_msgList[index]),
                       Text(
-                        "已读/未读",
+                        messageTime((_msgList[index].createTime! ~/ 1000)),
+                        // "${_msgList[index].createTime}",
                         style: TextStyle(
-                            fontSize: 18.sp,
+                            fontSize: 12.sp,
                             height: 1.h,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "时间",
-                        style: TextStyle(
-                            fontSize: 18.sp,
-                            height: 1.h,
-                            color: Colors.black,
+                            color: Colors.black54,
                             fontWeight: FontWeight.bold),
                       ),
                     ],

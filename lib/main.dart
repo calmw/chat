@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'db/chat_list.dart';
 import 'db/msg.dart';
 import 'db/user.dart';
+import 'models/msg_list.dart';
 
 Future<void> main() async {
   await dotenv.load(); // 加载.env文件
@@ -24,6 +25,7 @@ Future<void> main() async {
   createChatListTable();
   // 获取chat list中用户基本信息
   saveUserInfo();
+  getMsgList();
   // 获取jwt_token
   var token = await SharedPrefer.getJwtToken();
   var wsUrl = Env().get("WS_HOST") + '?token=$token';
