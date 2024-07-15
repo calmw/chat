@@ -79,7 +79,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
   }
 
-  // 登陆检测
   Future<void> checkLogin() async {
     var user = await SharedPrefer.getUser();
     if (user == null) {

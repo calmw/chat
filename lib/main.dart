@@ -14,12 +14,16 @@ import 'package:provider/provider.dart';
 
 import 'db/chat_list.dart';
 import 'db/msg.dart';
+import 'db/user.dart';
 
 Future<void> main() async {
   await dotenv.load(); // 加载.env文件
   // 创建数据表
+  createUserTable();
   createMsgTable();
   createChatListTable();
+  // 获取chat list中用户基本信息
+  saveUserInfo();
   // 获取jwt_token
   var token = await SharedPrefer.getJwtToken();
   var wsUrl = Env().get("WS_HOST") + '?token=$token';
@@ -41,8 +45,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var token = SharedPrefer.getJwtToken();
-    var wsUrl = Uri.parse(Env().get("WS_HOST") + '?token=$token');
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -61,12 +63,6 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.blue,
               textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
             ),
-            // routes: {
-            //   "/": (context) => const Index(),
-            //   "/login": (context) => const Login(),
-            //   "/register": (context) => const Register(),
-            //   "/chat_details": (context,{arguments}) =>  ChatDetails(arguments:arguments)
-            // },
             onGenerateRoute: onGenerateRoute,
           );
         },

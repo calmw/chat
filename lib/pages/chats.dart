@@ -23,18 +23,17 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
+    getMyUid();
     setChatList();
     // 订阅事件
     EventBusManager.eventBus.on<NewMsgEvent>().listen((event) {
       if (event.eType == 1) {
-
         // 新消息事件
         setState(() {
           setChatList();
         });
       }
     });
-    getMyUid();
   }
 
   @override
@@ -71,7 +70,6 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
     );
   }
 
-  /// 获取子项目
   Widget createItem(int index) {
     return RawMaterialButton(
         onPressed: () => {
@@ -242,6 +240,5 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

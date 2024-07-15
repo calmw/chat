@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../db/msg.dart';
+import '../db/user.dart';
 import '../utils/env.dart';
+import '../utils/http.dart';
 
 class ChatDetails extends StatefulWidget {
   const ChatDetails({super.key, this.arguments});
@@ -39,6 +41,15 @@ class ChatDetailsState extends State<ChatDetails> {
     });
   }
 
+  getUserInfo(String uid)  async {
+    var user=await getUser(uid);
+    if(user['uid']==""){
+      return const User( "","","");
+    }else{
+      return User(user['uid'] as String?, user['username'] as String?, user['avatar'] as String?);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -62,7 +73,7 @@ class ChatDetailsState extends State<ChatDetails> {
                 child: CircleAvatar(
                   radius: 50.w,
                   backgroundImage: NetworkImage(Env().get("STATIC_HOST") +
-                      "${widget.arguments['senderAvatar']}"),
+                      "${getUserInfo(widget.arguments['uid'])['avatar']}"),
                 ),
               ),
             ),
@@ -81,7 +92,7 @@ class ChatDetailsState extends State<ChatDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "${widget.arguments['senderUsername']}",
+                            "${getUserInfo(widget.arguments['sender'])['username']}",
                             style: TextStyle(
                                 fontSize: 18.sp,
                                 height: 1.h,
@@ -144,7 +155,7 @@ class ChatDetailsState extends State<ChatDetails> {
                 child: CircleAvatar(
                   radius: 40.w,
                   backgroundImage:
-                      NetworkImage(Env().get("STATIC_HOST") + "senderAvatar"),
+                      NetworkImage(Env().get("STATIC_HOST") + "${getUserInfo(_msgList[index].sender!)['avatar']}"),
                 ),
               ),
             ),
@@ -200,7 +211,7 @@ class ChatDetailsState extends State<ChatDetails> {
                             overflow: TextOverflow.clip,
                             //必传文本
                             text: TextSpan(
-                              text: "消息内容",
+                              text: "${_msgList[index].content}",
                               // text: userPrivateProtocol,
                               style: TextStyle(
                                   color: Colors.grey,

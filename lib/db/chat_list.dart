@@ -5,8 +5,8 @@ class ChatList {
   final int? id;
   final String? receiver;
   final String? sender;
-  final String? senderUsername;
-  final String? senderAvatar;
+  final String? senderUsername; // 考虑删除
+  final String? senderAvatar; // 考虑删除
   final int? groupType;
   final int? isMySend;
   final int? sendStatus;
@@ -110,7 +110,19 @@ Future<List<ChatList>> getChatList() async {
           'latestMsgTime': latestMsgTime as int,
         } in chatListMaps)
       ChatList(
-          id, receiver, sender, senderUsername, senderAvatar, groupType, isMySend, sendStatus, readStatus, notReadMsgNo, latestMsg, latestMsgType, latestMsgTime),
+          id,
+          receiver,
+          sender,
+          senderUsername,
+          senderAvatar,
+          groupType,
+          isMySend,
+          sendStatus,
+          readStatus,
+          notReadMsgNo,
+          latestMsg,
+          latestMsgType,
+          latestMsgTime),
   ];
 }
 
