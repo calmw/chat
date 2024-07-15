@@ -77,7 +77,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
 
   freshChats(){
     EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
-    print(9998877);
   }
 
   // 登陆检测
@@ -87,7 +86,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
       Navigator.pushNamed(context, '/login');
     }
   }
-
 
   void _handleTabChange() {
     if (_tabController?.index == 0) {

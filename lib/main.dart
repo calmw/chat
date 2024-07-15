@@ -12,8 +12,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import 'db/chat_list.dart';
+import 'db/msg.dart';
+
 Future<void> main() async {
   await dotenv.load(); // 加载.env文件
+  // 创建数据表
+  createMsgTable();
+  createChatListTable();
+  // 获取jwt_token
   var token = await SharedPrefer.getJwtToken();
   var wsUrl = Env().get("WS_HOST") + '?token=$token';
   // 创建WebSocket连接

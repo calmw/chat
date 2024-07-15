@@ -37,8 +37,6 @@ class ChatDetailsState extends State<ChatDetails> {
     setState(() {
       _msgList = list;
     });
-    // print(555666);
-    // print(_msgList);
   }
 
   @override

@@ -23,19 +23,13 @@ class WebSocketClient {
       _channel = IOWebSocketChannel.connect(url);
       _channel!.stream.listen(
         (data) async {
-          print('Received data: $data');
-
           if (data == "pong") {
           } else {
             var msg = jsonDecode(data);
-            print(msg['content']);
             // 单聊
             if (msg['msg_transfer'] == 1 && msg['msg_type'] == 1) {
               await NewMsg().saveNoReadMsg();
               var list = await getChatList();
-              print(12);
-              print(list);
-              print(21);
               EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
             }
           }
@@ -79,47 +73,3 @@ class WebSocketProvider with ChangeNotifier {
     _webSocketClient.close();
   }
 }
-
-//
-// Socket sockets = Socket().newChannel();
-//
-// class Socket {
-//   late final WebSocketChannel channel;
-//
-//   newChannel() async {
-//     var token = await SharedPrefer.getJwtToken();
-//     var wsUrl = Uri.parse(Env().get("WS_HOST") + '?token=$token');
-//     print(wsUrl);
-//     channel = WebSocketChannel.connect(wsUrl);
-//     await channel.ready;
-//   }
-//
-//   listen() {
-//     channel.stream.listen((message) async {
-//       print(message);
-//       if (message == "pong") {
-//       } else {
-//         var msg = jsonDecode(message);
-//         print(msg['content']);
-//         // 单聊
-//         if (msg['msg_transfer'] == 1 && msg['msg_type'] == 1) {
-//           await NewMsg().saveNoReadMsg();
-//           var list = await getChatList();
-//           print(12);
-//           print(list);
-//           print(21);
-//           EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
-//         }
-//       }
-//       // channel.sink.add('ping');
-//       // channel.sink.close(status.goingAway);
-//     });
-//   }
-//
-//   heartBeat() {
-//     // 初始化计时器，每20秒执行一次_tick函数
-//     Timer.periodic(const Duration(seconds: 20), (timer) {
-//       channel.sink.add('ping');
-//     });
-//   }
-// }

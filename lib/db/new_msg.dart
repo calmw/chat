@@ -23,19 +23,6 @@ class NewMsg {
       var sendStatus = 0;
       var readStatus = 0;
       // 未读消息入库
-      print(Msg(
-          res['data']["chats"][i]["id"],
-          res['data']["chats"][i]["mid"],
-          res['data']["chats"][i]["sender"],
-          res['data']["chats"][i]["receiver"],
-          res['data']["chats"][i]["content"],
-          res['data']["chats"][i]["msg_type"],
-          res['data']["chats"][i]["group_type"],
-          isMySend,
-          sendStatus,
-          readStatus,
-          res['data']["chats"][i]["create_time"]));
-      print(666);
       await insertOrUpdateMsg(Msg(
           res['data']["chats"][i]["id"],
           res['data']["chats"][i]["mid"],

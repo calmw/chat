@@ -61,13 +61,11 @@ class ChatList {
 
 //创建 ChatList 表
 createChatListTable() async {
-  print(join(await getDatabasesPath(), 'chat_list.db'));
   openDatabase(
     join(await getDatabasesPath(), 'chat_list.db'),
     onCreate: (db, version) {
       var sql =
           "CREATE TABLE IF NOT EXISTS chat_list (id INTEGER PRIMARY KEY,receiver TEXT, sender TEXT, senderUsername TEXT, senderAvatar TEXT, groupType INTEGER, isMySend INTEGER, sendStatus INTEGER, readStatus INTEGER, notReadMsgNo INTEGER, latestMsg TEXT,latestMsgType INTEGER, latestMsgTime INTEGER)";
-      print(sql);
       return db.execute(sql);
     },
     version: 1,
