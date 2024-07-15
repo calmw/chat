@@ -1,7 +1,6 @@
 import 'package:chat/models/msg_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../db/user.dart';
 import '../utils/datatime.dart';
 import '../utils/env.dart';
 import '../utils/http.dart';
@@ -21,9 +20,6 @@ class ChatDetailsState extends State<ChatDetails> {
   final ScrollController _controller = ScrollController();
   late List<MsgList> _msgList = [];
   late String _sendText;
-
-  // late final User _user = User(widget.arguments['uid'], widget.arguments['username'],
-  //     widget.arguments['avatar']);
 
   @override
   void initState() {
