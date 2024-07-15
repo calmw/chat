@@ -52,7 +52,6 @@ createMsgTable() async {
     onCreate: (db, version) {
       var sql =
           "CREATE TABLE IF NOT EXISTS msg (id INTEGER PRIMARY KEY, mid INTEGER, sender TEXT , receiver TEXT , content TEXT , msgType INTEGER , groupType INTEGER , createTime INTEGER)";
-      print(sql);
       return db.execute(sql);
     },
     version: 1,

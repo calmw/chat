@@ -42,7 +42,6 @@ class RegisterState extends State<Register> {
     // 发送验证码
     var res = await HttpUtils.post("api/v1/send_register_email_code",
         data: {"email": _email});
-    print(res);
     if (res["code"] != 0) {
       ErrDialog().showBottomMsg(context, res["message"]);
       return false;
@@ -106,17 +105,13 @@ class RegisterState extends State<Register> {
     var headers = {
       'Authorization': token.toString(),
     };
-    print(1);
-    print(Env().get("API_HOST") + "hello",);
 var r = await HttpUtils.get(Env().get("API_HOST") + "hello");
-    print(r);
     var response = await dio.get(
       Env().get("API_HOST") + "hello",
       data: formData,
       options: Options(headers: headers),
     );
     var res = jsonDecode(response.toString());
-    print(res);
     CheckLogin().check(res["code"], context);
     if (res["code"] == 0) {
       _avatar = res["data"]["uri"];
@@ -323,14 +318,6 @@ var r = await HttpUtils.get(Env().get("API_HOST") + "hello");
 
   // 注册
   void _register() async {
-    print({
-      "username": _nickname,
-      "email": _email,
-      "code": _code,
-      "avatar": _avatar,
-      "key": _verifyKey,
-      "password": _password,
-    });
     // return;
     var res = await HttpUtils.post("api/v1/register", data: {
       "username": _nickname,

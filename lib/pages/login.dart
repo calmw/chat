@@ -133,7 +133,6 @@ class LoginState extends State<Login> {
       data: {"username": _username, "password": _password},
     );
     var res = jsonDecode(response.toString());
-    print(res);
     if (res["code"] == 0) {
       var user = User();
       user.uid = res["data"]["uid"];

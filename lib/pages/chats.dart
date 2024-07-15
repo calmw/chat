@@ -29,7 +29,6 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
       if(event.eType==1){ // 新消息事件
         setChatList();
       }
-      // print('Received event: ${event.message}');
     });
   }
 

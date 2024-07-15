@@ -6,8 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'db/chat_list.dart';
+import 'db/msg.dart';
+
 Future<void> main() async {
   await dotenv.load(); // 加载.env文件
+  // 创建数据表
+  createMsgTable();
+  createChatListTable();
+
   runApp(const MyApp());
 }
 

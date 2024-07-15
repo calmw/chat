@@ -19,24 +19,20 @@ class Socket {
   newChannel() async {
     var token = await SharedPrefer.getJwtToken();
     var wsUrl = Uri.parse(Env().get("WS_HOST") + '?token=$token');
-    print(wsUrl);
     channel = WebSocketChannel.connect(wsUrl);
     await channel.ready;
   }
 
   listen() {
     channel.stream.listen((message) async {
-      print(message);
       if (message == "pong") {
       } else {
         var msg = jsonDecode(message);
-        print(msg['content']);
         // 单聊
         if (msg['data_type'] == 1) {
           await NewMsg().doNewMsg();
           EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
           var list =await getChatList();
-          print(list);
         }
       }
       // channel.sink.add('ping');

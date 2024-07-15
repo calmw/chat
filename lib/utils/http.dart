@@ -19,7 +19,6 @@ class HttpUtils {
     var headers = {
       'Authorization': token.toString(),
     };
-    print(headers);
     try {
       var response = await dio.get(path,
           queryParameters: queryParameters, options: Options(headers: headers));

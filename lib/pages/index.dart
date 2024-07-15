@@ -52,8 +52,6 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
         _handleTabChange();
       }
     });
-    createMsgTable();
-    createChatListTable();
     getUserInfo();
     socket();
   }
