@@ -35,7 +35,7 @@ class ChatDetailsState extends State<ChatDetails> {
   }
 
   setMsgList() async {
-    var list = await getMsgList();
+    var list = await getMsgList(widget.arguments['sender']);
     setState(() {
       _msgList = list;
     });
@@ -235,7 +235,7 @@ class ChatDetailsState extends State<ChatDetails> {
             alignment: Alignment.topLeft,
             width: 60.w,
             height: 60.h,
-            margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+            margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             child: Align(
               alignment: Alignment.topCenter,
               child: SizedBox(

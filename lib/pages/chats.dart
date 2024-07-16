@@ -76,6 +76,7 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
         onPressed: () => {
               Navigator.pushNamed(context, '/chat_details', arguments: {
                 "uid": _uid,
+                "sender": _chatList[index].sender,
                 "senderUsername": _chatList[index].senderUsername,
                 "senderAvatar": _chatList[index].senderAvatar,
                 "receiver": _chatList[index].receiver,

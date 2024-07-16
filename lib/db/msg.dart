@@ -96,11 +96,54 @@ insertOrUpdateMsg(Msg msg) async {
 }
 
 // 查询Msg列表
-Future<List<Msg>> getMsg() async {
+Future<List<Msg>> getMsg(String sender) async {
   final db = await openDatabase(
     join(await getDatabasesPath(), 'msg.db'),
   );
-  String orderBy = 'createTime DESC';
+  String orderBy = 'createTime ASC';
+  final List<Map<String, Object?>> MsgMaps = await db.query('msg',where: 'sender=?',whereArgs: [sender],orderBy: orderBy);
+  for (final {
+  'id': id as int,
+  'mid': mid as int,
+  'sender': sender as String,
+  'receiver': receiver as String,
+  'content': content as String,
+  'msgType': msgType as int,
+  'groupType': groupType as int,
+  'isMySend': isMySend as int,
+  'sendStatus': sendStatus as int,
+  'readStatus': readStatus as int,
+  'createTime': createTime as int,
+  } in MsgMaps){
+    Msg(id, mid, sender, receiver, content, msgType, groupType, isMySend,
+        sendStatus, readStatus, createTime);
+  }
+
+  return [
+    for (final {
+          'id': id as int,
+          'mid': mid as int,
+          'sender': sender as String,
+          'receiver': receiver as String,
+          'content': content as String,
+          'msgType': msgType as int,
+          'groupType': groupType as int,
+          'isMySend': isMySend as int,
+          'sendStatus': sendStatus as int,
+          'readStatus': readStatus as int,
+          'createTime': createTime as int,
+        } in MsgMaps)
+      Msg(id, mid, sender, receiver, content, msgType, groupType, isMySend,
+          sendStatus, readStatus, createTime),
+  ];
+}
+
+// 查询Msg列表
+Future<List<Msg>> getAllMsg() async {
+  final db = await openDatabase(
+    join(await getDatabasesPath(), 'msg.db'),
+  );
+  String orderBy = 'createTime ASC';
   final List<Map<String, Object?>> MsgMaps = await db.query('msg',orderBy: orderBy);
   for (final {
   'id': id as int,
@@ -115,7 +158,6 @@ Future<List<Msg>> getMsg() async {
   'readStatus': readStatus as int,
   'createTime': createTime as int,
   } in MsgMaps){
-   var user= getUserInfo(sender);
     Msg(id, mid, sender, receiver, content, msgType, groupType, isMySend,
         sendStatus, readStatus, createTime);
   }

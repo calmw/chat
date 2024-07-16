@@ -25,7 +25,7 @@ Future<void> main() async {
   createChatListTable();
   // 获取chat list中用户基本信息
   saveUserInfo();
-  getMsgList();
+  getAllMsgList();
   // 获取jwt_token
   var token = await SharedPrefer.getJwtToken();
   var wsUrl = Env().get("WS_HOST") + '?token=$token';

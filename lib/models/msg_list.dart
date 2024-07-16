@@ -37,8 +37,45 @@ class MsgList {
   );
 }
 
-getMsgList() async {
-  var msgs = await getMsg();
+getMsgList(String uid) async {
+  var msgs = await getMsg(uid);
+  List<MsgList> ml = [];
+  Map<String, User> userInfo = {};
+
+  for (Msg m in msgs) {
+    if (userInfo[m.sender] == null) {
+      var user = await getUser(m.sender!);
+      userInfo[m.sender!] = User(user['uid'] as String?,
+          user['username'] as String?, user['avatar'] as String?);
+    }
+    if (userInfo[m.receiver] == null) {
+      var user = await getUser(m.receiver!);
+      userInfo[m.receiver!] = User(user['uid'] as String?,
+          user['username'] as String?, user['avatar'] as String?);
+    }
+    ml.add(MsgList(
+      m.id,
+      m.mid,
+      m.sender,
+      userInfo[m.sender!]?.username,
+      userInfo[m.sender!]?.avatar,
+      m.receiver,
+      userInfo[m.receiver!]?.username,
+      userInfo[m.receiver!]?.avatar,
+      m.content,
+      m.msgType,
+      m.groupType,
+      m.isMySend,
+      m.sendStatus,
+      m.readStatus,
+      m.createTime,
+    ));
+  }
+  return ml;
+}
+
+getAllMsgList() async {
+  var msgs = await getAllMsg();
   List<MsgList> ml = [];
   Map<String, User> userInfo = {};
 
