@@ -119,6 +119,7 @@ class ChatDetailsState extends State<ChatDetails> {
 
   buildList() {
     return ListView.builder(
+      padding: EdgeInsets.only(bottom: 50.h),
       itemBuilder: (context, index) {
         return createItem(index);
       },
@@ -179,7 +180,8 @@ class ChatDetailsState extends State<ChatDetails> {
                     ),
                   ),
                   Expanded(
-                    child: SizedBox(
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                       height: 45.h,
                       child: TextField(
                         onChanged: (value) {
@@ -188,12 +190,17 @@ class ChatDetailsState extends State<ChatDetails> {
                         },
                         autofocus: false,
                         maxLines: 20,
+                        cursorHeight: 30,
                         keyboardType: TextInputType.text,
                         style:
                             TextStyle(color: Colors.black54, fontSize: 18.sp),
                         decoration: const InputDecoration(
-                          border: InputBorder.none,
+                          // border: UnderlineInputBorder(
+                          //     borderSide: BorderSide.none, // 设置边框为透明
+                          //   ),
                           hintText: 'Message',
+                          hintStyle:
+                              TextStyle(textBaseline: TextBaseline.alphabetic),
                         ),
                       ),
                     ),
@@ -230,11 +237,9 @@ class ChatDetailsState extends State<ChatDetails> {
       children: [
         SizedBox(
           width: 60.w, // 左侧宽度
-          height: 90.h,
           child: Container(
             alignment: Alignment.topLeft,
             width: 60.w,
-            height: 60.h,
             margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
             child: Align(
               alignment: Alignment.topCenter,
@@ -252,66 +257,63 @@ class ChatDetailsState extends State<ChatDetails> {
         ),
         Expanded(
           child: Container(
-              height: 70.h,
+              // height: 70.h,
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.blue,
-                  width: 1, // 边框宽度
+                  width: 1,
                 ),
               ),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "${_msgList[index].senderUsername}",
-                        style: TextStyle(
-                            fontSize: 18.sp,
-                            height: 1.h,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      weightReadStatus(_msgList[index]),
-                      Text(
-                        messageTime((_msgList[index].createTime! ~/ 1000)),
-                        // "${_msgList[index].createTime}",
-                        style: TextStyle(
-                            fontSize: 12.sp,
-                            height: 1.h,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                  Padding(
+                    padding: EdgeInsets.only(right: 10.w),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "${_msgList[index].senderUsername}",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              height: 1.h,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        weightReadStatus(_msgList[index]),
+                        Text(
+                          messageTime((_msgList[index].createTime! ~/ 1000)),
+                          style: TextStyle(
+                              fontSize: 12.sp,
+                              height: 1.h,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: SizedBox(
-                        height: 58,
-                        child: RichText(
-                            maxLines: 2,
-                            overflow: TextOverflow.clip,
-                            //必传文本
-                            text: TextSpan(
-                              text: "${_msgList[index].content}",
-                              // text: userPrivateProtocol,
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14.sp,
-                                  height: 1.25.h),
-                            )),
-                      ))
-                    ],
+                  Padding(
+                    padding: EdgeInsets.only(right: 15.w),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: SizedBox(
+                          child: RichText(
+                              maxLines: 100,
+                              overflow: TextOverflow.visible,
+                              //必传文本
+                              text: TextSpan(
+                                text: "${_msgList[index].content}",
+                                // text: userPrivateProtocol,
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14.sp,
+                                    height: 1.25.h),
+                              )),
+                        ))
+                      ],
+                    ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  const Divider(
-                    height: 1, // 划线的高度
-                    color: Colors.black12, // 划线的颜色
-                    // 其他属性...
-                  ),
+                  const SizedBox(height: 5,)
                 ],
               )),
         ),
