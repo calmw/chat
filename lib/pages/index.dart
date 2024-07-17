@@ -107,17 +107,18 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
           //标题，使用 Tab 构造
           isScrollable: false,
           //是否可以滑动，标题左右滑动
-          padding: EdgeInsets.only(top: 50.h, left: 100.w, right: 100.w),
-          indicatorWeight: 5,
+          padding: EdgeInsets.only(top: 90.h, left: 100.w, right: 100.w),
+          indicatorWeight: 10.h,
           //指示器高度
           indicator: UnderlineTabIndicator(
-              borderSide: const BorderSide(width: 2, color: Colors.white),
-              insets: EdgeInsets.only(left: 150.w, right: 150.w)),
+              borderSide: BorderSide(width: 3.h, color: Colors.white),
+              insets: EdgeInsets.only(left: 150.w, right: 150.w)
+          ),
           labelColor: Colors.white,
           //标题选择时颜色
           unselectedLabelColor: const Color.fromRGBO(201, 221, 244, 1),
           //未被选择时颜色
-          labelStyle: const TextStyle(fontSize: 18), //被选择时label风格样式
+          labelStyle: TextStyle(fontSize: 34.sp), //被选择时label风格样式
         ),
         // leading: ,
         actions: [

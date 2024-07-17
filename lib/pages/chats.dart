@@ -86,14 +86,14 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
         child: Row(
           children: [
             SizedBox(
-              width: 80.w, // 左侧宽度
-              height: 100.w,
+              width: 140.w, // 左侧宽度
+              height: 140.h,
               child: Container(
-                width: 80.w,
-                height: 80.w,
-                margin: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                width: 120.w,
+                height: 120.h,
+                margin:  EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 10.h),
                 child: CircleAvatar(
-                  radius: 60.w,
+                  radius: 120.w,
                   backgroundImage: NetworkImage(
                       Env().get("STATIC_HOST") + _chatList[index].senderAvatar),
                 ),
@@ -101,39 +101,41 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
             ),
             Expanded(
               child: SizedBox(
-                  height: 70.h,
+                  height: 140.h,
                   child: Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(right: 10.w),
+                        // padding: EdgeInsets.only(right: 10.w),
+                        padding: EdgeInsets.fromLTRB(5.w, 15.h, 10.w, 10.h),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               "${_chatList[index].senderUsername}",
                               style: TextStyle(
-                                  fontSize: 18.sp,
-                                  height: 1.h,
+                                  fontSize: 34.sp,
+                                  // height: 30.h,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.done_rounded,
                                   // Icons.done_all_rounded,
-                                  color: Color.fromRGBO(100, 161, 193, 1),
-                                  size: 20,
+                                  color: const Color.fromRGBO(100, 161, 193, 1),
+                                  size: 40.sp,
                                 ),
                                 Text(
                                   messageTime(
                                       _chatList[index].latestMsgTime! ~/ 1000),
                                   style: TextStyle(
-                                      fontSize: 12.sp,
+                                      fontSize: 22.sp,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
-                                      height: 1.h),
+                                      // height: 1.h
+                                  ),
                                 ),
                               ],
                             ),
@@ -146,7 +148,7 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
                           children: [
                             Expanded(
                                 child: SizedBox(
-                              height: 58,
+                              height: 58.h,
                               child: RichText(
                                   maxLines: 2,
                                   overflow: TextOverflow.clip,
@@ -156,18 +158,19 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
                                     // text: userPrivateProtocol,
                                     style: TextStyle(
                                         color: Colors.grey,
-                                        fontSize: 14.sp,
-                                        height: 1.25.h),
+                                        fontSize: 28.sp,
+                                        height: 2.h
+                                    ),
                                   )),
                             ))
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 5,
+                       SizedBox(
+                        height: 15.h,
                       ),
-                      const Divider(
-                        height: 1, // 划线的高度
+                       Divider(
+                        height: 1.h, // 划线的高度
                         color: Colors.black12, // 划线的颜色
                         // 其他属性...
                       ),

@@ -148,7 +148,9 @@ deleteMsg() {
 // 更新用户信息到存储
 saveUserInfo() async {
   var user = await SharedPrefer.getUser();
-  getServerUserInfo(user!.uid);
+  if (user != null) {
+    getServerUserInfo(user.uid);
+  }
   var chatList = await getChatList();
   for (ChatList l in chatList) {
     getServerUserInfo(l.sender!);
@@ -163,11 +165,12 @@ Future<void> getServerUserInfo(String uid) async {
   }
 }
 
-getUserInfo(String uid)  async {
-  var user=await getUser(uid);
-  if(user['uid']==""){
-    return const User( "","","");
-  }else{
-    return User(user['uid'] as String?, user['username'] as String?, user['avatar'] as String?);
+getUserInfo(String uid) async {
+  var user = await getUser(uid);
+  if (user['uid'] == "") {
+    return const User("", "", "");
+  } else {
+    return User(user['uid'] as String?, user['username'] as String?,
+        user['avatar'] as String?);
   }
 }
