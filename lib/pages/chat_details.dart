@@ -1,5 +1,6 @@
 import 'package:chat/models/msg_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../utils/datatime.dart';
 import '../utils/env.dart';
@@ -17,21 +18,46 @@ class ChatDetails extends StatefulWidget {
 }
 
 class ChatDetailsState extends State<ChatDetails> {
-  final ScrollController _controller = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   late List<MsgList> _msgList = [];
   late String _sendText;
+  final FocusScopeNode focusScopeNode = FocusScopeNode();
+  static const MethodChannel _channel = MethodChannel('keyboard_events');
 
   @override
   void initState() {
     super.initState();
+    _channel.setMethodCallHandler(_handleKeyboardEvent);
     setMsgList();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _scrollController.dispose();
+    focusScopeNode.unfocus();
+    focusScopeNode.dispose();
     // 取消监听
     super.dispose();
+  }
+
+  void _scrollToBottom() {
+    // 滚动到底部
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
+
+  Future<void> _handleKeyboardEvent(MethodCall call) async {
+    if (call.method == "onKeyboardShow") {
+      // 键盘弹起事件处理
+      print("键盘弹起");
+      _scrollToBottom();
+    } else if (call.method == "onKeyboardHide") {
+      // 键盘关闭事件处理
+      print("键盘关闭");
+    }
   }
 
   setMsgList() async {
@@ -45,7 +71,7 @@ class ChatDetailsState extends State<ChatDetails> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         // automaticallyImplyLeading: false,
         iconTheme: const IconThemeData(
@@ -111,9 +137,25 @@ class ChatDetailsState extends State<ChatDetails> {
         ),
         centerTitle: true,
       ),
-      body: Stack(
-        children: [buildList(), chatBottom()],
-      ),
+      body:
+        //   SingleChildScrollView(
+        //           physics: const AlwaysScrollableScrollPhysics(),
+        // child:
+      GestureDetector(
+              onTap: () {
+                // 点击空白区域时，关闭软键盘并取消焦点
+                FocusScope.of(context).requestFocus(FocusNode());
+                SystemChannels.textInput.invokeMethod('hide');
+              },
+              child: FocusScope(
+                node: focusScopeNode,
+                child: Stack(
+                  children: [buildList(), chatBottom()],
+                ),
+              )
+              // )
+              ),
+          // )
     );
   }
 
@@ -125,7 +167,7 @@ class ChatDetailsState extends State<ChatDetails> {
       },
       // itemExtent: 100,
       itemCount: _msgList.length,
-      controller: _controller,
+      controller: _scrollController,
       key: const PageStorageKey(1),
     );
   }
@@ -187,6 +229,7 @@ class ChatDetailsState extends State<ChatDetails> {
                         onChanged: (value) {
                           _sendText = value;
                           print(value);
+                          _scrollToBottom();
                         },
                         autofocus: false,
                         maxLines: 20,
@@ -195,9 +238,7 @@ class ChatDetailsState extends State<ChatDetails> {
                         style:
                             TextStyle(color: Colors.black54, fontSize: 18.sp),
                         decoration: const InputDecoration(
-                          // border: UnderlineInputBorder(
-                          //     borderSide: BorderSide.none, // 设置边框为透明
-                          //   ),
+                          border: InputBorder.none,
                           hintText: 'Message',
                           hintStyle:
                               TextStyle(textBaseline: TextBaseline.alphabetic),
@@ -313,7 +354,9 @@ class ChatDetailsState extends State<ChatDetails> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 5,)
+                  const SizedBox(
+                    height: 5,
+                  )
                 ],
               )),
         ),

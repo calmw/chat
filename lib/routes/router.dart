@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "../pages/TestPage.dart";
 import "../pages/chat_details.dart";
 import "../pages/index.dart";
 import "../pages/login.dart";
@@ -10,6 +11,7 @@ Map routes = {
   "/": (context) => const Index(),
   "/login": (context) => const Login(),
   "/register": (context) => const Register(),
+  "/test": (context) => TestPage(),
   "/chat_details": (context,{arguments}) =>  ChatDetails(arguments:arguments)
 };
 

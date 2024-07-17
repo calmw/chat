@@ -32,6 +32,15 @@ class CallState extends State<Call>{
             style: TextStyle(fontSize: 24),
           ),
         ),
+        TextButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/test');
+          },
+          child: const Text(
+            'test',
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
       ],
     );
   }

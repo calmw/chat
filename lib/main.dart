@@ -62,6 +62,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Chat',
             theme: ThemeData(
+              canvasColor: Colors.white, // 整个背景颜色
               primarySwatch: Colors.blue,
               textTheme: Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
             ),
