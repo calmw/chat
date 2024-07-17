@@ -11,7 +11,7 @@ class ToastS {
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.black,
         textColor: Colors.white,
-        fontSize: 16.sp);
+        fontSize: 30.sp);
   }
 
   static void showLong(String msg) {
@@ -22,6 +22,6 @@ class ToastS {
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.black,
         textColor: Colors.white,
-        fontSize: 16.sp);
+        fontSize: 30.sp);
   }
 }

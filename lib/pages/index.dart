@@ -1,10 +1,7 @@
 import 'package:chat/storage/shared_preference.dart';
 import 'package:chat/utils/env.dart';
-import 'package:chat/utils/socket/socket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../db/chat_list.dart';
-import '../db/msg.dart';
 import '../utils/event_bus.dart';
 import '../utils/http.dart';
 import 'call.dart';
@@ -29,7 +26,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     ),
   ];
   final List<Widget> tabBarViewChildren = <Widget>[
-    Chats(),
+    const Chats(),
     Call(),
   ];
   late String _username = "";
@@ -97,9 +94,11 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        iconTheme: const IconThemeData(
+        iconTheme: IconThemeData(
           color: Colors.white, // 设置返回箭头颜色为白色
+          size: 48.sp,
         ),
         backgroundColor: const Color.fromRGBO(55, 120, 167, 1),
         flexibleSpace: TabBar(
@@ -108,12 +107,12 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
           //标题，使用 Tab 构造
           isScrollable: false,
           //是否可以滑动，标题左右滑动
-          padding: const EdgeInsets.only(top: 60, left: 100, right: 100),
+          padding: EdgeInsets.only(top: 50.h, left: 100.w, right: 100.w),
           indicatorWeight: 5,
           //指示器高度
           indicator: UnderlineTabIndicator(
               borderSide: const BorderSide(width: 2, color: Colors.white),
-              insets: EdgeInsets.only(left: 60.w, right: 60.w)),
+              insets: EdgeInsets.only(left: 150.w, right: 150.w)),
           labelColor: Colors.white,
           //标题选择时颜色
           unselectedLabelColor: const Color.fromRGBO(201, 221, 244, 1),
@@ -123,10 +122,10 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
         // leading: ,
         actions: [
           IconButton(
-            icon: const Icon(
+            icon:  Icon(
               Icons.search,
               color: Colors.white,
-              size: 24,
+              size: 50.sp
             ),
             onPressed: () => {},
           ),
@@ -141,7 +140,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
             UserAccountsDrawerHeader(
               accountName: Text(
                 _username,
-                style: const TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 34.sp),
               ),
               accountEmail: Text(_email),
               decoration: const BoxDecoration(
@@ -153,27 +152,27 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.settings, size: 36.0),
-              title: const Text('设置'),
+              leading:  Icon(Icons.settings, size: 56.sp),
+              title:  Text('设置',style: TextStyle(fontSize: 34.sp),),
               onTap: () {},
             ),
             ListTile(
-              leading: const Icon(Icons.person, size: 36.0),
-              title: const Text('个人信息'),
+              leading:  Icon(Icons.person, size: 56.sp),
+              title: Text('个人信息',style: TextStyle(fontSize: 34.sp),),
               onTap: () {
                 Navigator.pushNamed(context, '/');
               },
             ),
             ListTile(
-              leading: const Icon(Icons.wallet, size: 36.0),
-              title: const Text('链上钱包'),
+              leading:  Icon(Icons.wallet, size: 56.sp),
+              title:  Text('链上钱包',style: TextStyle(fontSize: 34.sp),),
               onTap: () {
                 Navigator.pushNamed(context, '/');
               },
             ),
             ListTile(
-              leading: const Icon(Icons.logout_rounded, size: 35.0),
-              title: const Text('退出登录'),
+              leading: Icon(Icons.logout_rounded, size: 56.sp),
+              title:  Text('退出登录',style: TextStyle(fontSize: 34.sp),),
               onTap: () async {
                 await SharedPrefer.logOut();
                 Navigator.pushNamed(context, '/login');

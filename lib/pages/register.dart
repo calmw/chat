@@ -137,9 +137,9 @@ class RegisterState extends State<Register> {
           color: Colors.white,
         ),
         backgroundColor: const Color.fromRGBO(55, 120, 167, 1),
-        title: const Text(
+        title: Text(
           "注册",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white,fontSize: 34.sp),
         ),
         centerTitle: true,
       ),
@@ -169,35 +169,35 @@ class RegisterState extends State<Register> {
                         GestureDetector(
                           onTap: _getImage, // 点击头像区域时触发_getImage方法
                           child: CircleAvatar(
-                            radius: 50,
+                            radius: 90.w,
                             backgroundImage: _image != null
                                 ? FileImage(_image!)
                                 : null, // 根据_image是否为空设置头像图片
                             child: _image == null
-                                ? const Icon(
+                                ?  Icon(
                               Icons.camera_alt,
-                              size: 50,
+                              size: 90.w,
                               color: Colors.white,
                             )
                                 : null,
                           ),
                         ),
                         ////
-                        const SizedBox(height: 15),
+                         SizedBox(height: 35.h),
                         TextFormField(
-                          style: TextStyle(color: Colors.black54, fontSize: 18.sp),
+                          style: TextStyle(color: Colors.black54, fontSize: 34.sp),
                           autofocus: false,
                           decoration: InputDecoration(
-                              icon: const Icon(Icons.person),
+                              icon:  Icon(Icons.person,size: 56.sp,),
                               // filled: true,
                               // fillColor: const Color.fromRGBO(253, 247, 254, 1),
                               labelText: '用户名',
                               labelStyle: TextStyle(
-                                fontSize: 18.sp,
+                                fontSize: 34.sp,
                               ),
-                              hintText: "用户名",
+                              hintText: "请输入用户名",
                               hintStyle:
-                              TextStyle(fontSize: 16.sp,)),
+                              TextStyle(fontSize: 34.sp,)),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return '请输入用户名';
@@ -207,18 +207,18 @@ class RegisterState extends State<Register> {
                           onChanged: (value) => _nickname = value,
                           onSaved: (value) => _nickname = value!,
                         ),
-                        const SizedBox(height: 15),
+                         SizedBox(height: 20.h),
                         TextFormField(
-                          style: TextStyle(color: Colors.black54, fontSize: 18.sp),
+                          style: TextStyle(color: Colors.black54, fontSize: 34.sp),
                           autofocus: false,
                           decoration:  InputDecoration(
-                              icon: const Icon(Icons.email),
+                              icon:  Icon(Icons.email,size: 56.sp,),
                               labelText: '邮箱',
                               labelStyle:  TextStyle(
-                                fontSize: 18.sp,
+                                fontSize: 34.sp,
                               ),
-                              hintText: "邮箱",
-                              hintStyle: const TextStyle(fontSize: 16)),
+                              hintText: "请输入邮箱",
+                              hintStyle:  TextStyle(fontSize: 34.sp)),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return '请输入邮箱';
@@ -228,20 +228,20 @@ class RegisterState extends State<Register> {
                           onChanged: (value) => _email = value,
                           onSaved: (value) => _email = value!,
                         ),
-                        const SizedBox(height: 15),
+                         SizedBox(height: 20.h),
                         Stack(
                           children: [
                             TextFormField(
-                              style: TextStyle(color: Colors.black54, fontSize: 18.sp),
+                              style: TextStyle(color: Colors.black54, fontSize: 34.sp),
                               autofocus: false,
                               decoration:  InputDecoration(
-                                  icon:const Icon(Icons.confirmation_num),
+                                  icon: Icon(Icons.confirmation_num,size: 56.sp,),
                                   labelText: '验证码',
                                   labelStyle: TextStyle(
-                                    fontSize: 18.sp,
+                                    fontSize: 34.sp,
                                   ),
                                   hintText: "验证码",
-                                  hintStyle: const TextStyle(fontSize: 16)),
+                                  hintStyle:  TextStyle(fontSize: 34.sp)),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return '请输入邮箱验证码';
@@ -257,32 +257,32 @@ class RegisterState extends State<Register> {
                                 child: _secondsRemaining == 60
                                     ? TextButton(
                                   onPressed: _startTimer,
-                                  child: const Text(
+                                  child: Text(
                                     "发送验证码",
                                     style: TextStyle(
-                                        fontSize: 16,
-                                        color: Color.fromRGBO(55, 120, 167, 1)),
+                                        fontSize: 26.sp,
+                                        color: const Color.fromRGBO(55, 120, 167, 1)),
                                   ),
                                 )
                                     : TextButton(
                                   onPressed: null,
-                                  child: Text("$_secondsRemaining秒"),
+                                  child: Text("$_secondsRemaining秒",style: TextStyle(fontSize: 26.sp),),
                                 ))
                           ],
                         ),
-                        const SizedBox(height: 15),
+                        SizedBox(height: 20.h),
                         TextFormField(
-                          style: TextStyle(color: Colors.black54, fontSize: 18.sp),
+                          style: TextStyle(color: Colors.black54, fontSize: 34.sp),
                           autofocus: false,
                           obscureText: true,
                           decoration:  InputDecoration(
-                              icon:const Icon(Icons.key),
+                              icon: Icon(Icons.key,size: 56.sp,),
                               labelText: '密码',
                               labelStyle:  TextStyle(
-                                fontSize: 18.sp,
+                                fontSize: 34.sp,
                               ),
-                              hintText: "密码",
-                              hintStyle: const TextStyle(fontSize: 16)),
+                              hintText: "请输入密码",
+                              hintStyle:  TextStyle(fontSize: 34.sp)),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return '请输入密码';
@@ -292,7 +292,7 @@ class RegisterState extends State<Register> {
                           onChanged: (value) => _password = value,
                           onSaved: (value) => _password = value!,
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: 40.h),
                         ElevatedButton(
                           onPressed: () => {
                             if (_formKey.currentState!.validate())
@@ -305,12 +305,12 @@ class RegisterState extends State<Register> {
                             backgroundColor: const Color.fromRGBO(55, 120, 167, 1),
                             fixedSize: const Size(200, 50),
                           ),
-                          child: const Text(
+                          child:  Text(
                             "注册",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
+                            style: TextStyle(fontSize: 40.sp, color: Colors.white),
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: 40.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -318,8 +318,8 @@ class RegisterState extends State<Register> {
                                 onPressed: () => {
                                   Navigator.pushNamed(context, '/login'),
                                 },
-                                child: const Text("去登陆")),
-                            TextButton(onPressed: () => {}, child: const Text("忘记密码？")),
+                                child: Text("去登陆",style: TextStyle(fontSize: 26.sp),)),
+                            TextButton(onPressed: () => {}, child: Text("忘记密码？",style: TextStyle(fontSize: 26.sp))),
                           ],
                         ),
                       ],
