@@ -104,57 +104,64 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
                   height: 70.h,
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "${_chatList[index].senderUsername}",
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                height: 1.h,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(
-                                Icons.done_rounded,
-                                // Icons.done_all_rounded,
-                                color: Color.fromRGBO(100, 161, 193, 1),
-                                size: 20,
-                              ),
-                              Text(
-                                messageTime(_chatList[index].latestMsgTime! ~/ 1000),
-                                style: TextStyle(
-                                    fontSize: 12.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    height: 1.h),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                              child: SizedBox(
-                            height: 58,
-                            child: RichText(
-                                maxLines: 2,
-                                overflow: TextOverflow.clip,
-                                //必传文本
-                                text: TextSpan(
-                                  text: _chatList[index].latestMsg,
-                                  // text: userPrivateProtocol,
+                      Padding(
+                        padding: EdgeInsets.only(right: 10.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${_chatList[index].senderUsername}",
+                              style: TextStyle(
+                                  fontSize: 18.sp,
+                                  height: 1.h,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                const Icon(
+                                  Icons.done_rounded,
+                                  // Icons.done_all_rounded,
+                                  color: Color.fromRGBO(100, 161, 193, 1),
+                                  size: 20,
+                                ),
+                                Text(
+                                  messageTime(
+                                      _chatList[index].latestMsgTime! ~/ 1000),
                                   style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14.sp,
-                                      height: 1.25.h),
-                                )),
-                          ))
-                        ],
+                                      fontSize: 12.sp,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      height: 1.h),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 15.w),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: SizedBox(
+                              height: 58,
+                              child: RichText(
+                                  maxLines: 2,
+                                  overflow: TextOverflow.clip,
+                                  //必传文本
+                                  text: TextSpan(
+                                    text: _chatList[index].latestMsg,
+                                    // text: userPrivateProtocol,
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14.sp,
+                                        height: 1.25.h),
+                                  )),
+                            ))
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 5,

@@ -9,6 +9,7 @@ import 'package:chat/utils/toast.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/user.dart';
@@ -33,6 +34,8 @@ class RegisterState extends State<Register> {
   late String _avatar = '';
   late Timer _timer;
   int _secondsRemaining = 60;
+
+  final FocusScopeNode focusScopeNode = FocusScopeNode();
 
   Future<bool> sendCode() async {
     if (!Email.checkFormat(_email)) {
@@ -118,6 +121,8 @@ class RegisterState extends State<Register> {
     if (_secondsRemaining < 60) {
       _timer.cancel();
     }
+    focusScopeNode.unfocus();
+    focusScopeNode.dispose();
     super.dispose();
   }
 
@@ -137,106 +142,117 @@ class RegisterState extends State<Register> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 30,
-                ),
-                ////
-                GestureDetector(
-                  onTap: _getImage, // 点击头像区域时触发_getImage方法
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: _image != null
-                        ? FileImage(_image!)
-                        : null, // 根据_image是否为空设置头像图片
-                    child: _image == null
-                        ? const Icon(
+      body:GestureDetector(
+        onTap: () {
+          // 点击空白区域时，关闭软键盘并取消焦点
+          FocusScope.of(context).requestFocus(FocusNode());
+          SystemChannels.textInput.invokeMethod('hide');
+        },
+        child: FocusScope(
+          node: focusScopeNode,
+          child: Container(
+            alignment: Alignment.center,
+            color: Colors.white,
+            child:   Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      ////
+                      GestureDetector(
+                        onTap: _getImage, // 点击头像区域时触发_getImage方法
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundImage: _image != null
+                              ? FileImage(_image!)
+                              : null, // 根据_image是否为空设置头像图片
+                          child: _image == null
+                              ? const Icon(
                             Icons.camera_alt,
                             size: 50,
                             color: Colors.white,
                           )
-                        : null,
-                  ),
-                ),
-                ////
-                const SizedBox(height: 15),
-                TextFormField(
-                  style: TextStyle(color: Colors.black54, fontSize: 18.sp),
-                  autofocus: false,
-                  decoration: InputDecoration(
-                      icon: const Icon(Icons.person),
-                      // filled: true,
-                      // fillColor: const Color.fromRGBO(253, 247, 254, 1),
-                      labelText: '用户名',
-                      labelStyle: TextStyle(
-                        fontSize: 18.sp,
+                              : null,
+                        ),
                       ),
-                      hintText: "用户名",
-                      hintStyle:
-                          TextStyle(fontSize: 16.sp,)),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '请输入用户名';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) => _nickname = value,
-                  onSaved: (value) => _nickname = value!,
-                ),
-                const SizedBox(height: 15),
-                TextFormField(
-                  style: TextStyle(color: Colors.black54, fontSize: 18.sp),
-                  autofocus: false,
-                  decoration:  InputDecoration(
-                      icon: const Icon(Icons.email),
-                      labelText: '邮箱',
-                      labelStyle:  TextStyle(
-                        fontSize: 18.sp,
+                      ////
+                      const SizedBox(height: 15),
+                      TextFormField(
+                        style: TextStyle(color: Colors.black54, fontSize: 18.sp),
+                        autofocus: false,
+                        decoration: InputDecoration(
+                            icon: const Icon(Icons.person),
+                            // filled: true,
+                            // fillColor: const Color.fromRGBO(253, 247, 254, 1),
+                            labelText: '用户名',
+                            labelStyle: TextStyle(
+                              fontSize: 18.sp,
+                            ),
+                            hintText: "用户名",
+                            hintStyle:
+                            TextStyle(fontSize: 16.sp,)),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return '请输入用户名';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) => _nickname = value,
+                        onSaved: (value) => _nickname = value!,
                       ),
-                      hintText: "邮箱",
-                      hintStyle: const TextStyle(fontSize: 16)),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '请输入邮箱';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) => _email = value,
-                  onSaved: (value) => _email = value!,
-                ),
-                const SizedBox(height: 15),
-                Stack(
-                  children: [
-                    TextFormField(
-                      style: TextStyle(color: Colors.black54, fontSize: 18.sp),
-                      autofocus: false,
-                      decoration:  InputDecoration(
-                          icon:const Icon(Icons.confirmation_num),
-                          labelText: '验证码',
-                          labelStyle: TextStyle(
-                            fontSize: 18.sp,
+                      const SizedBox(height: 15),
+                      TextFormField(
+                        style: TextStyle(color: Colors.black54, fontSize: 18.sp),
+                        autofocus: false,
+                        decoration:  InputDecoration(
+                            icon: const Icon(Icons.email),
+                            labelText: '邮箱',
+                            labelStyle:  TextStyle(
+                              fontSize: 18.sp,
+                            ),
+                            hintText: "邮箱",
+                            hintStyle: const TextStyle(fontSize: 16)),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return '请输入邮箱';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) => _email = value,
+                        onSaved: (value) => _email = value!,
+                      ),
+                      const SizedBox(height: 15),
+                      Stack(
+                        children: [
+                          TextFormField(
+                            style: TextStyle(color: Colors.black54, fontSize: 18.sp),
+                            autofocus: false,
+                            decoration:  InputDecoration(
+                                icon:const Icon(Icons.confirmation_num),
+                                labelText: '验证码',
+                                labelStyle: TextStyle(
+                                  fontSize: 18.sp,
+                                ),
+                                hintText: "验证码",
+                                hintStyle: TextStyle(fontSize: 16)),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return '请输入邮箱验证码';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) => _code = value,
+                            onSaved: (value) => _code = value!,
                           ),
-                          hintText: "验证码",
-                          hintStyle: TextStyle(fontSize: 16)),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return '请输入邮箱验证码';
-                        }
-                        return null;
-                      },
-                      onChanged: (value) => _code = value,
-                      onSaved: (value) => _code = value!,
-                    ),
-                    Positioned(
-                        right: 0,
-                        top: 5,
-                        child: _secondsRemaining == 60
-                            ? TextButton(
+                          Positioned(
+                              right: 0,
+                              top: 5,
+                              child: _secondsRemaining == 60
+                                  ? TextButton(
                                 onPressed: _startTimer,
                                 child: const Text(
                                   "发送验证码",
@@ -245,67 +261,70 @@ class RegisterState extends State<Register> {
                                       color: Color.fromRGBO(55, 120, 167, 1)),
                                 ),
                               )
-                            : TextButton(
+                                  : TextButton(
                                 onPressed: null,
                                 child: Text("$_secondsRemaining秒"),
                               ))
-                  ],
-                ),
-                const SizedBox(height: 15),
-                TextFormField(
-                  style: TextStyle(color: Colors.black54, fontSize: 18.sp),
-                  autofocus: false,
-                  obscureText: true,
-                  decoration:  InputDecoration(
-                      icon:const Icon(Icons.key),
-                      labelText: '密码',
-                      labelStyle:  TextStyle(
-                        fontSize: 18.sp,
+                        ],
                       ),
-                      hintText: "密码",
-                      hintStyle: const TextStyle(fontSize: 16)),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '请输入密码';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) => _password = value,
-                  onSaved: (value) => _password = value!,
-                ),
-                const SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: () => {
-                    if (_formKey.currentState!.validate())
-                      {_formKey.currentState!.save(), _register()}
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    backgroundColor: const Color.fromRGBO(55, 120, 167, 1),
-                    fixedSize: const Size(200, 50),
-                  ),
-                  child: const Text(
-                    "注册",
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
+                      const SizedBox(height: 15),
+                      TextFormField(
+                        style: TextStyle(color: Colors.black54, fontSize: 18.sp),
+                        autofocus: false,
+                        obscureText: true,
+                        decoration:  InputDecoration(
+                            icon:const Icon(Icons.key),
+                            labelText: '密码',
+                            labelStyle:  TextStyle(
+                              fontSize: 18.sp,
+                            ),
+                            hintText: "密码",
+                            hintStyle: const TextStyle(fontSize: 16)),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return '请输入密码';
+                          }
+                          return null;
+                        },
+                        onChanged: (value) => _password = value,
+                        onSaved: (value) => _password = value!,
+                      ),
+                      const SizedBox(height: 40),
+                      ElevatedButton(
                         onPressed: () => {
-                              Navigator.pushNamed(context, '/login'),
-                            },
-                        child: const Text("去登陆")),
-                    TextButton(onPressed: () => {}, child: const Text("忘记密码？")),
-                  ],
-                ),
-              ],
-            )),
-      ),
+                          if (_formKey.currentState!.validate())
+                            {_formKey.currentState!.save(), _register()}
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          backgroundColor: const Color.fromRGBO(55, 120, 167, 1),
+                          fixedSize: const Size(200, 50),
+                        ),
+                        child: const Text(
+                          "注册",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                              onPressed: () => {
+                                Navigator.pushNamed(context, '/login'),
+                              },
+                              child: const Text("去登陆")),
+                          TextButton(onPressed: () => {}, child: const Text("忘记密码？")),
+                        ],
+                      ),
+                    ],
+                  )),
+            ), // 这里放置你的输入组件
+          ),
+        ),
+      )
     );
   }
 
