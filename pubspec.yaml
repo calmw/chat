@@ -29,7 +29,6 @@ dependencies:
   event_bus: ^2.0.0
   fluttertoast: ^8.2.6
   provider: ^6.1.2
-  flutter_keyboard_visibility: ^6.0.0
 
 dev_dependencies:
   flutter_test:
