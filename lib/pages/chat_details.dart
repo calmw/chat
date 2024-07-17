@@ -29,6 +29,7 @@ class ChatDetailsState extends State<ChatDetails> {
     super.initState();
     _channel.setMethodCallHandler(_handleKeyboardEvent);
     setMsgList();
+    _scrollAnimateToBottom();
   }
 
   @override
@@ -41,6 +42,11 @@ class ChatDetailsState extends State<ChatDetails> {
   }
 
   void _scrollToBottom() {
+    // 滚动到底部
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
+
+  void _scrollAnimateToBottom() {
     // 滚动到底部
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
