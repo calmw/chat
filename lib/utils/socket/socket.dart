@@ -24,12 +24,14 @@ class WebSocketClient {
       _channel!.stream.listen(
         (data) async {
           if (data == "pong") {
+            print('pong');
           } else {
             var msg = jsonDecode(data);
             // 单聊
             if (msg['msg_transfer'] == 1 && msg['msg_type'] == 1) {
+              print('ws 收到单聊数据');
               await NewMsg().saveNoReadMsg();
-              var list = await getChatList();
+              // var list = await getChatList();
               EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
             }
           }

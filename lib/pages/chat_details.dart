@@ -156,7 +156,13 @@ class ChatDetailsState extends State<ChatDetails> {
               child: FocusScope(
                 node: focusScopeNode,
                 child: Stack(
-                  children: [buildList(), chatBottom()],
+                  children: [
+                    buildList(),
+                    SizedBox(
+                      height: 250.h,
+                    ),
+                    chatBottom(),
+                  ],
                 ),
               )
               // )
@@ -355,9 +361,13 @@ class ChatDetailsState extends State<ChatDetails> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 10.h,
-              )
+              index == _msgList.length-1
+                  ? SizedBox(
+                      height: 50.h,
+                    )
+                  : SizedBox(
+                      height: 10.h,
+                    )
             ],
           ),
         ),

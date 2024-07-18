@@ -41,8 +41,11 @@ class SharedPrefer {
 
   static Future<Object?> getCurrentMid() async {
     final prefs = await SharedPreferences.getInstance();
-    final currentMid = prefs.getInt("current_mid");
-    return currentMid ?? 1;
+    var currentMid = prefs.getInt("current_mid");
+    if(currentMid==0){
+      currentMid=1;
+    }
+    return currentMid;
   }
 
   static Future<Object?> setCurrentMid(int currentMid) async {

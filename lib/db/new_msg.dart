@@ -9,15 +9,19 @@ class NewMsg {
     /// 获取未读消息
     // 获取current_mid
     var currentMid = await SharedPrefer.getCurrentMid();
+    print(currentMid);
+    print(666);
     // 拉取最新消息
     var res = await HttpUtils.post("api/v1/get_not_read_msg",
         data: {"current_mid": currentMid});
     if (res["code"] != 0) {
       return;
     }
+    print(res['data']["current_mid"]);
 
+    print(res['data']["chats"]);
     /// 处理未读消息
-    // await SharedPrefer.setCurrentMid(res['data']["current_mid"]); // 上线需打开
+    await SharedPrefer.setCurrentMid(res['data']["current_mid"]); // 上线需打开
     for (var i = 0; i < res['data']["chats"].length; i++) {
       var isMySend = 0;
       var sendStatus = 0;

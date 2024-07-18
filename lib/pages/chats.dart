@@ -29,6 +29,7 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
     // 订阅事件
     EventBusManager.eventBus.on<NewMsgEvent>().listen((event) {
       if (event.eType == 1) {
+        print('收到eType为1的消息事件');
         // 新消息事件
         setState(() {
           setChatList();
