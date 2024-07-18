@@ -95,7 +95,7 @@ Future<Map<String, Object?>> getUser(String uid) async {
     print('查询到的数据: ${row['avatar']}, ${row['username']}');
     return row;
   } else {
-    return {"uid": ""};
+    return {};
   }
 }
 

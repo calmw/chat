@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../utils/datatime.dart';
 import '../utils/env.dart';
+import '../utils/event_bus.dart';
 import '../utils/http.dart';
 
 class ChatDetails extends StatefulWidget {
@@ -21,19 +22,47 @@ class ChatDetailsState extends State<ChatDetails> {
   final ScrollController _scrollController = ScrollController();
   late List<MsgList> _msgList = [];
   late String _sendText;
+  late int maxMid;
   final FocusScopeNode focusScopeNode = FocusScopeNode();
   static const MethodChannel _channel = MethodChannel('keyboard_events');
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_onScroll);
     _channel.setMethodCallHandler(_handleKeyboardEvent);
     setMsgList();
-    // _scrollAnimateToBottom();
+    // 订阅事件
+    EventBusManager.eventBus.on<NewMsgEvent>().listen((event) {
+      if (event.eType == 1) {
+        print('收到eType为1的消息事件');
+        print(maxMid);
+        // 新消息事件
+        setNewMsgList(maxMid);
+      }
+    });
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      // 当滚动到达底部时
+
+      print(_scrollController.position.maxScrollExtent);
+      print("ListView已滑动到底部！");
+      // 在这里执行加载更多数据的操作
+    } else if (_scrollController.position.pixels ==
+        _scrollController.position.minScrollExtent) {
+      // 当滚动到达底部时
+      print("ListView已滑动到顶部！");
+      // 在这里执行加载更多数据的操作
+    }
   }
 
   @override
   void dispose() {
+    print("dispose ~~~~~~~ ");
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     focusScopeNode.unfocus();
     focusScopeNode.dispose();
@@ -47,6 +76,7 @@ class ChatDetailsState extends State<ChatDetails> {
   }
 
   void _scrollAnimateToBottom() {
+    print(_scrollController.position.maxScrollExtent);
     // 滚动到底部
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
@@ -67,9 +97,28 @@ class ChatDetailsState extends State<ChatDetails> {
   }
 
   setMsgList() async {
-    var list = await getMsgList(widget.arguments['sender']);
+    var list = await getMsgList(widget.arguments['sender'], 0);
     setState(() {
       _msgList = list;
+      maxMid = _msgList[_msgList.length - 1].mid!;
+      print(21);
+      _scrollAnimateToBottom();
+    });
+  }
+
+  setNewMsgList(int mid) async {
+    var oldList = _msgList;
+    var list = await getMsgList(widget.arguments['sender'], mid);
+    print(mid);
+    print(list);
+    print(999);
+    for (int i = 0; i < list.length; i++) {
+      oldList.add(list[i]);
+      maxMid = list[i].mid;
+    }
+    setState(() {
+      _msgList = oldList;
+      _scrollAnimateToBottom();
     });
   }
 
@@ -177,7 +226,6 @@ class ChatDetailsState extends State<ChatDetails> {
       itemBuilder: (context, index) {
         return createItem(index);
       },
-      // itemExtent: 100,
       itemCount: _msgList.length,
       controller: _scrollController,
       key: const PageStorageKey(1),
@@ -268,15 +316,23 @@ class ChatDetailsState extends State<ChatDetails> {
                         size: 54.sp,
                         color: const Color.fromRGBO(81, 168, 235, 1),
                       ),
-                      onPressed: () {
-                        HttpUtils.post('api/v1/send_msg', data: {
+                      onPressed: () async {
+                        var res =
+                            await HttpUtils.post('api/v1/send_msg', data: {
                           "from": "${widget.arguments['uid']}",
-                          "to": "${widget.arguments['receiver']}",
+                          "to": "${widget.arguments['sender']}",
                           "client_msg_id": "string",
                           "content": _sendText,
                           "msg_type": 1,
                           "group_type": 1
                         });
+                        if (res['code'] == 0) {
+                          print('已发送');
+                          // 标记为发送成功
+                        } else {
+                          print('发送失败');
+                          // 标记为发送失败
+                        }
                       },
                     ),
                   ),
@@ -317,7 +373,8 @@ class ChatDetailsState extends State<ChatDetails> {
               Padding(
                 padding: EdgeInsets.fromLTRB(0.w, 0.w, 10.w, 5.w),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "${_msgList[index].senderUsername}",
@@ -327,15 +384,22 @@ class ChatDetailsState extends State<ChatDetails> {
                           color: Colors.black,
                           fontWeight: FontWeight.bold),
                     ),
-                    weightReadStatus(_msgList[index]),
-                    Text(
-                      messageTime((_msgList[index].createTime! ~/ 1000)),
-                      style: TextStyle(
-                          fontSize: 24.sp,
-                          height: 3.h,
-                          color: Colors.black45,
-                          fontWeight: FontWeight.w400),
-                    ),
+                    Expanded(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        weightReadStatus(_msgList[index]),
+                        Text(" "),
+                        Text(
+                          messageTime((_msgList[index].createTime! ~/ 1000)),
+                          style: TextStyle(
+                              fontSize: 24.sp,
+                              height: 3.h,
+                              color: Colors.black45,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -361,7 +425,7 @@ class ChatDetailsState extends State<ChatDetails> {
                   ],
                 ),
               ),
-              index == _msgList.length-1
+              index == _msgList.length - 1
                   ? SizedBox(
                       height: 50.h,
                     )

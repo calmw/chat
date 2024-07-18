@@ -52,6 +52,8 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
 
   setChatList() async {
     _chatList = await getChatList();
+    print(121);
+    print(_chatList);
   }
 
   @override

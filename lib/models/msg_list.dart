@@ -37,19 +37,29 @@ class MsgList {
   );
 }
 
-getMsgList(String uid) async {
-  var msgs = await getMsg(uid);
+getMsgList(String uid, int maxMid) async {
+  var msgs = await getMsg(uid, maxMid);
   List<MsgList> ml = [];
   Map<String, User> userInfo = {};
 
   for (Msg m in msgs) {
     if (userInfo[m.sender] == null) {
       var user = await getUser(m.sender!);
+      if (user.isEmpty) {
+        print("empty ~~~~~~~~ 1");
+        await getServerUserInfo(m.sender!);
+        user = await getUser(m.sender!);
+      }
       userInfo[m.sender!] = User(user['uid'] as String?,
           user['username'] as String?, user['avatar'] as String?);
     }
     if (userInfo[m.receiver] == null) {
       var user = await getUser(m.receiver!);
+      if (user.isEmpty) {
+        print("empty ~~~~~~~~ 2");
+        await getServerUserInfo(m.receiver!);
+        user = await getUser(m.receiver!);
+      }
       userInfo[m.receiver!] = User(user['uid'] as String?,
           user['username'] as String?, user['avatar'] as String?);
     }

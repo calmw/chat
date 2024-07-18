@@ -132,7 +132,7 @@ insertOrUpdateChatList(ChatList chatList) async {
   );
 
   // 构建查询语句
-  String query = "SELECT * FROM chat_list WHERE sender = '${chatList.sender}'";
+  String query = "SELECT * FROM chat_list WHERE (sender = '${chatList.sender}' and receiver='${chatList.receiver}') or (sender = '${chatList.receiver}' and receiver='${chatList.sender}')";
   if (chatList.groupType! > 1) {
     query = "SELECT * FROM chat_list WHERE receiver = '${chatList.receiver}'";
   }

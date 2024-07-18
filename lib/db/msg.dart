@@ -96,25 +96,32 @@ insertOrUpdateMsg(Msg msg) async {
 }
 
 // 查询Msg列表
-Future<List<Msg>> getMsg(String sender) async {
+Future<List<Msg>> getMsg(String sender, int maxMid) async {
   final db = await openDatabase(
     join(await getDatabasesPath(), 'msg.db'),
   );
   String orderBy = 'createTime ASC';
-  final List<Map<String, Object?>> MsgMaps = await db.query('msg',where: 'sender=?',whereArgs: [sender],orderBy: orderBy);
+  final List<Map<String, Object?>> MsgMaps;
+  if (maxMid > 0) {
+    MsgMaps = await db.query('msg',
+        where: 'sender=? and mid>?', whereArgs: [sender, maxMid], orderBy: orderBy);
+  } else {
+    // MsgMaps = await db.query('msg', where: 'sender=?', whereArgs: [sender], orderBy: orderBy);
+    MsgMaps = await db.query('msg', orderBy: orderBy);
+  }
   for (final {
-  'id': id as int,
-  'mid': mid as int,
-  'sender': sender as String,
-  'receiver': receiver as String,
-  'content': content as String,
-  'msgType': msgType as int,
-  'groupType': groupType as int,
-  'isMySend': isMySend as int,
-  'sendStatus': sendStatus as int,
-  'readStatus': readStatus as int,
-  'createTime': createTime as int,
-  } in MsgMaps){
+        'id': id as int,
+        'mid': mid as int,
+        'sender': sender as String,
+        'receiver': receiver as String,
+        'content': content as String,
+        'msgType': msgType as int,
+        'groupType': groupType as int,
+        'isMySend': isMySend as int,
+        'sendStatus': sendStatus as int,
+        'readStatus': readStatus as int,
+        'createTime': createTime as int,
+      } in MsgMaps) {
     Msg(id, mid, sender, receiver, content, msgType, groupType, isMySend,
         sendStatus, readStatus, createTime);
   }
@@ -144,20 +151,21 @@ Future<List<Msg>> getAllMsg() async {
     join(await getDatabasesPath(), 'msg.db'),
   );
   String orderBy = 'createTime ASC';
-  final List<Map<String, Object?>> MsgMaps = await db.query('msg',orderBy: orderBy);
+  final List<Map<String, Object?>> MsgMaps =
+      await db.query('msg', orderBy: orderBy);
   for (final {
-  'id': id as int,
-  'mid': mid as int,
-  'sender': sender as String,
-  'receiver': receiver as String,
-  'content': content as String,
-  'msgType': msgType as int,
-  'groupType': groupType as int,
-  'isMySend': isMySend as int,
-  'sendStatus': sendStatus as int,
-  'readStatus': readStatus as int,
-  'createTime': createTime as int,
-  } in MsgMaps){
+        'id': id as int,
+        'mid': mid as int,
+        'sender': sender as String,
+        'receiver': receiver as String,
+        'content': content as String,
+        'msgType': msgType as int,
+        'groupType': groupType as int,
+        'isMySend': isMySend as int,
+        'sendStatus': sendStatus as int,
+        'readStatus': readStatus as int,
+        'createTime': createTime as int,
+      } in MsgMaps) {
     Msg(id, mid, sender, receiver, content, msgType, groupType, isMySend,
         sendStatus, readStatus, createTime);
   }
