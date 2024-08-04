@@ -165,6 +165,14 @@ Future<void> getServerUserInfo(String uid) async {
   }
 }
 
+Future<Map<String, Object?>?> getUserInfoFromServer(String uid) async {
+  var res = await HttpUtils.get("api/v1/user_info?uid=$uid");
+  if (res["code"] == 0) {
+    return User(uid, res["data"]["username"], res["data"]["avatar"]).toMap();
+  }
+  return null;
+}
+
 getUserInfo(String uid) async {
   var user = await getUser(uid);
   if (user['uid'] == "") {

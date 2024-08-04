@@ -46,7 +46,6 @@ getMsgList(String uid, int maxMid) async {
     if (userInfo[m.sender] == null) {
       var user = await getUser(m.sender!);
       if (user.isEmpty) {
-        print("empty ~~~~~~~~ 1");
         await getServerUserInfo(m.sender!);
         user = await getUser(m.sender!);
       }
@@ -56,7 +55,6 @@ getMsgList(String uid, int maxMid) async {
     if (userInfo[m.receiver] == null) {
       var user = await getUser(m.receiver!);
       if (user.isEmpty) {
-        print("empty ~~~~~~~~ 2");
         await getServerUserInfo(m.receiver!);
         user = await getUser(m.receiver!);
       }

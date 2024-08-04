@@ -72,7 +72,7 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
     }
   }
 
-  freshChats(){
+  freshChats() {
     EventBusManager.eventBus.fire(NewMsgEvent("message", 1));
   }
 
@@ -101,33 +101,29 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
           size: 48.sp,
         ),
         backgroundColor: const Color.fromRGBO(55, 120, 167, 1),
-        flexibleSpace:TabBar(
-            controller: _tabController,
-            tabs: _myTabs,
-            //标题，使用 Tab 构造
-            isScrollable: false,
-            //是否可以滑动，标题左右滑动
-            padding: EdgeInsets.only(top: 50.h, left: 100.w, right: 100.w,bottom: 0.h),
-            indicatorWeight: 10.h,
-            //指示器高度
-            indicator: UnderlineTabIndicator(
-                borderSide: BorderSide(width: 3.h, color: Colors.white),
-                insets: EdgeInsets.only(left: 150.w, right: 150.w)
-            ),
-            labelColor: Colors.white,
-            //标题选择时颜色
-            unselectedLabelColor: const Color.fromRGBO(201, 221, 244, 1),
-            //未被选择时颜色
-            labelStyle: TextStyle(fontSize: 34.sp), //被选择时label风格样式
-          ),
+        flexibleSpace: TabBar(
+          controller: _tabController,
+          tabs: _myTabs,
+          //标题，使用 Tab 构造
+          isScrollable: false,
+          //是否可以滑动，标题左右滑动
+          padding: EdgeInsets.only(
+              top: 50.h, left: 100.w, right: 100.w, bottom: 0.h),
+          indicatorWeight: 10.h,
+          //指示器高度
+          indicator: UnderlineTabIndicator(
+              borderSide: BorderSide(width: 3.h, color: Colors.white),
+              insets: EdgeInsets.only(left: 150.w, right: 150.w)),
+          labelColor: Colors.white,
+          //标题选择时颜色
+          unselectedLabelColor: const Color.fromRGBO(201, 221, 244, 1),
+          //未被选择时颜色
+          labelStyle: TextStyle(fontSize: 34.sp), //被选择时label风格样式
+        ),
         // leading: ,
         actions: [
           IconButton(
-            icon:  Icon(
-              Icons.search,
-              color: Colors.white,
-              size: 50.sp
-            ),
+            icon: Icon(Icons.search, color: Colors.white, size: 50.sp),
             onPressed: () => {},
           ),
         ],
@@ -153,27 +149,49 @@ class IndexState extends State<Index> with TickerProviderStateMixin {
               ),
             ),
             ListTile(
-              leading:  Icon(Icons.settings, size: 56.sp),
-              title:  Text('设置',style: TextStyle(fontSize: 34.sp),),
+              leading: Icon(Icons.contact_page_outlined, size: 56.sp),
+              title: Text(
+                '联系人',
+                style: TextStyle(fontSize: 34.sp),
+              ),
+              onTap: () {
+                Navigator.pushNamed(context, '/contact');
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings, size: 56.sp),
+              title: Text(
+                '设置',
+                style: TextStyle(fontSize: 34.sp),
+              ),
               onTap: () {},
             ),
             ListTile(
-              leading:  Icon(Icons.person, size: 56.sp),
-              title: Text('个人信息',style: TextStyle(fontSize: 34.sp),),
+              leading: Icon(Icons.person, size: 56.sp),
+              title: Text(
+                '个人信息',
+                style: TextStyle(fontSize: 34.sp),
+              ),
               onTap: () {
                 Navigator.pushNamed(context, '/');
               },
             ),
             ListTile(
-              leading:  Icon(Icons.wallet, size: 56.sp),
-              title:  Text('链上钱包',style: TextStyle(fontSize: 34.sp),),
+              leading: Icon(Icons.wallet, size: 56.sp),
+              title: Text(
+                '链上钱包',
+                style: TextStyle(fontSize: 34.sp),
+              ),
               onTap: () {
                 Navigator.pushNamed(context, '/');
               },
             ),
             ListTile(
               leading: Icon(Icons.logout_rounded, size: 56.sp),
-              title:  Text('退出登录',style: TextStyle(fontSize: 34.sp),),
+              title: Text(
+                '退出登录',
+                style: TextStyle(fontSize: 34.sp),
+              ),
               onTap: () async {
                 await SharedPrefer.logOut();
                 Navigator.pushNamed(context, '/login');

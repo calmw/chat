@@ -13,6 +13,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import 'db/chat_list.dart';
+import 'db/contact.dart';
 import 'db/msg.dart';
 import 'db/user.dart';
 import 'models/msg_list.dart';
@@ -23,9 +24,12 @@ Future<void> main() async {
   createUserTable();
   createMsgTable();
   createChatListTable();
+  createContactTable();
   // 获取chat list中用户基本信息
   saveUserInfo();
   getAllMsgList();
+  // 获取通讯录
+  getContactFromServer();
   // 获取jwt_token
   var token = await SharedPrefer.getJwtToken();
   var wsUrl = Env().get("WS_HOST") + '?token=$token';
