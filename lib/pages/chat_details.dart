@@ -137,10 +137,10 @@ class ChatDetailsState extends State<ChatDetails> {
           children: [
             SizedBox(
               width: 100.w, // 左侧宽度
-              height: 100.w,
+              height: 100.h,
               child: Container(
                 width: 100.w,
-                height: 100.w,
+                height: 100.h,
                 margin: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 10.h),
                 child: CircleAvatar(
                   radius: 100.w,
@@ -167,7 +167,7 @@ class ChatDetailsState extends State<ChatDetails> {
                             "${widget.arguments['senderUsername']}",
                             style: TextStyle(
                                 fontSize: 36.sp,
-                                height: 2.1.h,
+                                height: 2.h,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -178,8 +178,8 @@ class ChatDetailsState extends State<ChatDetails> {
                           Text(
                             "刚刚在线",
                             style: TextStyle(
-                                fontSize: 24.sp,
-                                height: 2.1.h,
+                                fontSize: 22.sp,
+                                height: 2.h,
                                 color: Colors.white70,
                                 fontWeight: FontWeight.w100),
                           )
@@ -389,7 +389,7 @@ class ChatDetailsState extends State<ChatDetails> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         weightReadStatus(_msgList[index]),
-                        Text(" "),
+                        const Text(" "),
                         Text(
                           messageTime((_msgList[index].createTime! ~/ 1000)),
                           style: TextStyle(

@@ -51,8 +51,12 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
   }
 
   setChatList() async {
-    _chatList = await getChatList();
-    print(_chatList);
+    var cl = await getChatList();
+    print("聊天列表：");
+    print(cl);
+    setState(() {
+      _chatList = cl;
+    });
   }
 
   @override
@@ -93,7 +97,7 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
               child: Container(
                 width: 120.w,
                 height: 120.h,
-                margin:  EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 10.h),
+                margin: EdgeInsets.fromLTRB(10.w, 10.h, 10.w, 10.h),
                 child: CircleAvatar(
                   radius: 120.w,
                   backgroundImage: NetworkImage(
@@ -133,10 +137,10 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
                                   messageTime(
                                       _chatList[index].latestMsgTime! ~/ 1000),
                                   style: TextStyle(
-                                      fontSize: 22.sp,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      // height: 1.h
+                                    fontSize: 22.sp,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    // height: 1.h
                                   ),
                                 ),
                               ],
@@ -161,17 +165,16 @@ class ChatsState extends State<Chats> with AutomaticKeepAliveClientMixin {
                                     style: TextStyle(
                                         color: Colors.grey,
                                         fontSize: 28.sp,
-                                        height: 2.h
-                                    ),
+                                        height: 2.h),
                                   )),
                             ))
                           ],
                         ),
                       ),
-                       SizedBox(
+                      SizedBox(
                         height: 15.h,
                       ),
-                       Divider(
+                      Divider(
                         height: 1.h, // 划线的高度
                         color: Colors.black12, // 划线的颜色
                         // 其他属性...

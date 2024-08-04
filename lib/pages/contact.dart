@@ -72,22 +72,23 @@ class ContactState extends State<Contact> {
         ],
         automaticallyImplyLeading: true,
       ),
-      // body: Column(
-      //   children: [
-      //     Container(
-      //       height: 50.h,
-      //       width: double.infinity,
-      //       decoration: const BoxDecoration(color: Colors.black12),
-      //       padding: EdgeInsets.only(left: 20.w, top: 5.h),
-      //       child: Text(
-      //         "60人",
-      //         style: TextStyle(fontSize: 32.sp, color: Colors.black45),
-      //       ),
-      //     ),
-      //     buildList()
-      //   ],
-      // ),
-      body: buildList(),
+      body: Column(
+        children: [
+          Container(
+            height: 50.h,
+            width: double.infinity,
+            decoration: const BoxDecoration(color: Colors.black12),
+            padding: EdgeInsets.only(left: 20.w, top: 5.h),
+            child: Text(
+              "${_contractList.length}人",
+              style: TextStyle(fontSize: 32.sp, color: Colors.black45),
+            ),
+          ),
+          Expanded(child: buildList())
+
+        ],
+      ),
+      // body: buildList(),
     );
   }
 
