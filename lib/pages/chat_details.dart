@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../utils/datatime.dart';
 import '../utils/env.dart';
+import 'package:uuid/uuid.dart';
 import '../utils/event_bus.dart';
 import '../utils/http.dart';
 
@@ -23,6 +24,8 @@ class ChatDetailsState extends State<ChatDetails> {
   late List<MsgList> _msgList = [];
   late String _sendText;
   late int maxMid;
+  late int _msgType = 1;
+  late int _groupType = 1;
   final FocusScopeNode focusScopeNode = FocusScopeNode();
   static const MethodChannel _channel = MethodChannel('keyboard_events');
 
@@ -109,13 +112,22 @@ class ChatDetailsState extends State<ChatDetails> {
   setNewMsgList(int mid) async {
     var oldList = _msgList;
     var list = await getMsgList(widget.arguments['sender'], mid);
-    print(mid);
-    print(list);
-    print(999);
+    // print(mid);
+    // print(list);
+    // print(999);
     for (int i = 0; i < list.length; i++) {
       oldList.add(list[i]);
       maxMid = list[i].mid;
     }
+    setState(() {
+      _msgList = oldList;
+      _scrollAnimateToBottom();
+    });
+  }
+
+  addNewMsg(MsgList msg) async {
+    var oldList = _msgList;
+    oldList.add(msg);
     setState(() {
       _msgList = oldList;
       _scrollAnimateToBottom();
@@ -321,14 +333,21 @@ class ChatDetailsState extends State<ChatDetails> {
                             await HttpUtils.post('api/v1/send_msg', data: {
                           "from": "${widget.arguments['uid']}",
                           "to": "${widget.arguments['sender']}",
-                          "client_msg_id": "string",
+                          "client_msg_id": const Uuid().v4(),
                           "content": _sendText,
-                          "msg_type": 1,
-                          "group_type": 1
+                          "msg_type": _msgType,
+                          "group_type": _groupType
                         });
                         if (res['code'] == 0) {
                           print('已发送');
-                          // 标记为发送成功
+                          // 显示在聊天界面
+                          addNewMsg(MsgList(
+                              id, mid, sender, senderUsername, senderAvatar,
+                              receiver, receiverUsername, receiverAvatar, content,
+                              msgType, groupType, isMySend, sendStatus, readStatus,
+                              createTime
+                          )
+                          )
                         } else {
                           print('发送失败');
                           // 标记为发送失败

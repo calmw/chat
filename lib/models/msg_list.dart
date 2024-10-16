@@ -4,6 +4,7 @@ import '../db/user.dart';
 class MsgList {
   final int? id;
   final int? mid;
+  final String? msgClientId;
   final String? sender;
   final String? senderUsername;
   final String? senderAvatar;
@@ -13,7 +14,6 @@ class MsgList {
   final String? content;
   final int? msgType;
   final int? groupType;
-  final int? isMySend;
   final int? sendStatus;
   final int? readStatus;
   final int? createTime;
@@ -21,6 +21,7 @@ class MsgList {
   const MsgList(
     this.id,
     this.mid,
+    this.msgClientId,
     this.sender,
     this.senderUsername,
     this.senderAvatar,
@@ -30,7 +31,6 @@ class MsgList {
     this.content,
     this.msgType,
     this.groupType,
-    this.isMySend,
     this.sendStatus,
     this.readStatus,
     this.createTime,
@@ -64,6 +64,7 @@ getMsgList(String uid, int maxMid) async {
     ml.add(MsgList(
       m.id,
       m.mid,
+      m.msgClientId,
       m.sender,
       userInfo[m.sender!]?.username,
       userInfo[m.sender!]?.avatar,
@@ -73,7 +74,6 @@ getMsgList(String uid, int maxMid) async {
       m.content,
       m.msgType,
       m.groupType,
-      m.isMySend,
       m.sendStatus,
       m.readStatus,
       m.createTime,
@@ -102,6 +102,7 @@ getAllMsgList() async {
       m.id,
       m.mid,
       m.sender,
+      m.msgClientId,
       userInfo[m.sender!]?.username,
       userInfo[m.sender!]?.avatar,
       m.receiver,
@@ -110,7 +111,6 @@ getAllMsgList() async {
       m.content,
       m.msgType,
       m.groupType,
-      m.isMySend,
       m.sendStatus,
       m.readStatus,
       m.createTime,

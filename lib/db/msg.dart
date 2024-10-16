@@ -5,12 +5,12 @@ import 'package:sqflite/sqflite.dart';
 class Msg {
   final int? id;
   final int? mid;
+  final String? msgClientId;
   final String? sender;
   final String? receiver; // 好友用户ID或者群/channel ID
   final String? content;
   final int? msgType;
   final int? groupType;
-  final int? isMySend;
   final int? sendStatus;
   final int? readStatus;
   final int? createTime;
@@ -18,12 +18,12 @@ class Msg {
   const Msg(
     this.id,
     this.mid,
+    this.msgClientId,
     this.sender,
     this.receiver,
     this.content,
     this.msgType,
     this.groupType,
-    this.isMySend,
     this.sendStatus,
     this.readStatus,
     this.createTime,
@@ -34,12 +34,12 @@ class Msg {
     return {
       'id': id,
       'mid': mid,
+      'msgClientId': msgClientId,
       'sender': sender,
       'receiver': receiver,
       'content': content,
       'msgType': msgType,
       'groupType': groupType,
-      'isMySend': isMySend,
       'sendStatus': sendStatus,
       'readStatus': readStatus,
       'createTime': createTime,
@@ -49,7 +49,7 @@ class Msg {
   // 为了打印数据
   @override
   String toString() {
-    return 'Msg{id: $id, mid: $mid, sender: $sender, receiver: $receiver, content: $content, msgType: $msgType, groupType: $groupType, isMySend: $isMySend, sendStatus: $sendStatus, readStatus: $readStatus, createTime: $createTime}';
+    return 'Msg{id: $id, mid: $mid, msgClientId:$msgClientId, sender: $sender, receiver: $receiver, content: $content, msgType: $msgType, groupType: $groupType, sendStatus: $sendStatus, readStatus: $readStatus, createTime: $createTime}';
   }
 }
 
@@ -60,7 +60,7 @@ createMsgTable() async {
     join(await getDatabasesPath(), 'msg.db'),
     onCreate: (db, version) {
       var sql =
-          "CREATE TABLE IF NOT EXISTS msg (id INTEGER PRIMARY KEY, mid INTEGER, sender TEXT , receiver TEXT , content TEXT , msgType INTEGER , groupType INTEGER , isMySend INTEGER, sendStatus INTEGER, readStatus INTEGER, createTime INTEGER)";
+          "CREATE TABLE IF NOT EXISTS msg (id INTEGER PRIMARY KEY, mid INTEGER, msgClientId TEXT, sender TEXT , receiver TEXT , content TEXT , msgType INTEGER , groupType INTEGER, sendStatus INTEGER, readStatus INTEGER, createTime INTEGER)";
       return db.execute(sql);
     },
     version: 1,
@@ -104,7 +104,9 @@ Future<List<Msg>> getMsg(String sender, int maxMid) async {
   final List<Map<String, Object?>> MsgMaps;
   if (maxMid > 0) {
     MsgMaps = await db.query('msg',
-        where: 'sender=? and mid>?', whereArgs: [sender, maxMid], orderBy: orderBy);
+        where: 'sender=? and mid>?',
+        whereArgs: [sender, maxMid],
+        orderBy: orderBy);
   } else {
     // MsgMaps = await db.query('msg', where: 'sender=?', whereArgs: [sender], orderBy: orderBy);
     MsgMaps = await db.query('msg', orderBy: orderBy);
@@ -112,6 +114,7 @@ Future<List<Msg>> getMsg(String sender, int maxMid) async {
   for (final {
         'id': id as int,
         'mid': mid as int,
+        'msgClientId': msgClientId as String,
         'sender': sender as String,
         'receiver': receiver as String,
         'content': content as String,
@@ -122,7 +125,7 @@ Future<List<Msg>> getMsg(String sender, int maxMid) async {
         'readStatus': readStatus as int,
         'createTime': createTime as int,
       } in MsgMaps) {
-    Msg(id, mid, sender, receiver, content, msgType, groupType, isMySend,
+    Msg(id, mid, msgClientId, sender, receiver, content, msgType, groupType,
         sendStatus, readStatus, createTime);
   }
 
@@ -131,6 +134,7 @@ Future<List<Msg>> getMsg(String sender, int maxMid) async {
           'id': id as int,
           'mid': mid as int,
           'sender': sender as String,
+          'msgClientId': msgClientId as String,
           'receiver': receiver as String,
           'content': content as String,
           'msgType': msgType as int,
@@ -140,7 +144,7 @@ Future<List<Msg>> getMsg(String sender, int maxMid) async {
           'readStatus': readStatus as int,
           'createTime': createTime as int,
         } in MsgMaps)
-      Msg(id, mid, sender, receiver, content, msgType, groupType, isMySend,
+      Msg(id, mid, msgClientId, sender, receiver, content, msgType, groupType,
           sendStatus, readStatus, createTime),
   ];
 }
@@ -156,17 +160,17 @@ Future<List<Msg>> getAllMsg() async {
   for (final {
         'id': id as int,
         'mid': mid as int,
+        'msgClientId': msgClientId as String,
         'sender': sender as String,
         'receiver': receiver as String,
         'content': content as String,
         'msgType': msgType as int,
         'groupType': groupType as int,
-        'isMySend': isMySend as int,
         'sendStatus': sendStatus as int,
         'readStatus': readStatus as int,
         'createTime': createTime as int,
       } in MsgMaps) {
-    Msg(id, mid, sender, receiver, content, msgType, groupType, isMySend,
+    Msg(id, mid, msgClientId, sender, receiver, content, msgType, groupType,
         sendStatus, readStatus, createTime);
   }
 
@@ -174,17 +178,17 @@ Future<List<Msg>> getAllMsg() async {
     for (final {
           'id': id as int,
           'mid': mid as int,
+          'msgClientId': msgClientId as String,
           'sender': sender as String,
           'receiver': receiver as String,
           'content': content as String,
           'msgType': msgType as int,
           'groupType': groupType as int,
-          'isMySend': isMySend as int,
           'sendStatus': sendStatus as int,
           'readStatus': readStatus as int,
           'createTime': createTime as int,
         } in MsgMaps)
-      Msg(id, mid, sender, receiver, content, msgType, groupType, isMySend,
+      Msg(id, mid, msgClientId, sender, receiver, content, msgType, groupType,
           sendStatus, readStatus, createTime),
   ];
 }
